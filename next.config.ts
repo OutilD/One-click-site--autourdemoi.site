@@ -3,6 +3,18 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  /**
+   * Répertoire de sortie distinct entre développement et production.
+   *
+   * `next dev` et `next build` n'écrivent pas les mêmes artefacts. Partager
+   * `.next` entre les deux — ou y lancer un build pendant qu'un serveur tourne
+   * — laisse des références vers des chunks absents, d'où des
+   * « Cannot find module './vendor-chunks/….js' » au démarrage suivant.
+   *
+   * Le script `dev` fixe `NEXT_DIST_DIR=.next-dev` : les deux modes ne se
+   * marchent plus dessus.
+   */
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   images: {
     /**
      * Hôtes autorisés pour `next/image`.
