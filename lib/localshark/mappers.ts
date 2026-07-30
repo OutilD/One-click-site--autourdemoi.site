@@ -174,30 +174,19 @@ export function sizeGooglePhoto(url: string, size: number): string {
 const PHOTO_SIZES = { logo: 400, cover: 1600, gallery: 1600 } as const
 
 /**
- * Paramètres imposés au widget d'avis, quels que soient ceux renvoyés par l'API.
- *
- * L'annuaire met en avant les établissements : on n'y affiche que les avis
- * favorables, avec un commentaire. La note moyenne et le nombre total d'avis
- * restent affichés sans filtre juste au-dessus, donc le visiteur garde une
- * information complète sur la réputation réelle.
- */
-const WIDGET_PARAMS: Record<string, string> = {
-  /** 4 et 5 étoiles uniquement. */
-  ratings: '4,5',
-  /** Exclut les notes sans texte, qui n'apportent rien à la page. */
-  withText: '1',
-  lang: 'fr',
-}
-
-/**
- * Construit l'URL du widget d'avis : origine maîtrisée et filtres imposés.
+ * Construit l'URL du widget d'avis : origine maîtrisée et paramètres imposés.
  *
  * L'API renvoie une URL absolue liée à son propre environnement
  * (`http://localhost:3000/widget/…` depuis l'instance de développement).
- * Seul le chemin est conservé ; l'origine vient de la configuration — voir
- * `widgetBaseUrl` dans `config.ts`.
+ * Seul le chemin est conservé ; l'origine et les paramètres d'affichage
+ * viennent de la configuration — voir `widgetBaseUrl` et `getWidgetParams()`
+ * dans `config.ts`.
  */
-export function buildWidgetUrl(url: string, widgetBaseUrl?: string): string {
+export function buildWidgetUrl(
+  url: string,
+  widgetBaseUrl?: string,
+  widgetParams: Record<string, string> = {},
+): string {
   try {
     const target = new URL(url)
 
@@ -211,7 +200,7 @@ export function buildWidgetUrl(url: string, widgetBaseUrl?: string): string {
       target.port = base.port
     }
 
-    for (const [key, value] of Object.entries(WIDGET_PARAMS)) {
+    for (const [key, value] of Object.entries(widgetParams)) {
       target.searchParams.set(key, value)
     }
 
@@ -246,6 +235,8 @@ function cleanSocial(profiles: LsBusinessDetail['socialProfiles']) {
 export interface MapperOptions {
   /** Origine sur laquelle rebaser `reviewsWidgetUrl`. */
   widgetBaseUrl?: string
+  /** Paramètres d'affichage imposés à l'URL du widget. */
+  widgetParams?: Record<string, string>
 }
 
 /** Fiche allégée (endpoint A) → `Business`. */
@@ -276,7 +267,7 @@ export function toBusiness(dto: LsBusiness, options: MapperOptions = {}): Busine
 
     rating: dto.rating,
     reviewCount: dto.reviewCount,
-    reviewsWidgetUrl: buildWidgetUrl(dto.reviewsWidgetUrl, options.widgetBaseUrl),
+    reviewsWidgetUrl: buildWidgetUrl(dto.reviewsWidgetUrl, options.widgetBaseUrl, options.widgetParams),
 
     ...(location.latitude !== null ? { latitude: location.latitude } : {}),
     ...(location.longitude !== null ? { longitude: location.longitude } : {}),
