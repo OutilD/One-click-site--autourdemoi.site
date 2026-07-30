@@ -174,26 +174,46 @@ export function sizeGooglePhoto(url: string, size: number): string {
 const PHOTO_SIZES = { logo: 400, cover: 1600, gallery: 1600 } as const
 
 /**
- * Reconstruit l'URL du widget d'avis sur l'origine que nous maîtrisons.
+ * Paramètres imposés au widget d'avis, quels que soient ceux renvoyés par l'API.
+ *
+ * L'annuaire met en avant les établissements : on n'y affiche que les avis
+ * favorables, avec un commentaire. La note moyenne et le nombre total d'avis
+ * restent affichés sans filtre juste au-dessus, donc le visiteur garde une
+ * information complète sur la réputation réelle.
+ */
+const WIDGET_PARAMS: Record<string, string> = {
+  /** 4 et 5 étoiles uniquement. */
+  ratings: '4,5',
+  /** Exclut les notes sans texte, qui n'apportent rien à la page. */
+  withText: '1',
+  lang: 'fr',
+}
+
+/**
+ * Construit l'URL du widget d'avis : origine maîtrisée et filtres imposés.
  *
  * L'API renvoie une URL absolue liée à son propre environnement
  * (`http://localhost:3000/widget/…` depuis l'instance de développement).
- * Seuls le chemin et la requête sont conservés ; l'origine vient de la
- * configuration — voir `widgetBaseUrl` dans `config.ts`.
+ * Seul le chemin est conservé ; l'origine vient de la configuration — voir
+ * `widgetBaseUrl` dans `config.ts`.
  */
-export function rebaseWidgetUrl(url: string, widgetBaseUrl?: string): string {
-  if (!widgetBaseUrl) return url
-
+export function buildWidgetUrl(url: string, widgetBaseUrl?: string): string {
   try {
     const target = new URL(url)
-    const base = new URL(widgetBaseUrl)
 
-    target.protocol = base.protocol
-    target.hostname = base.hostname
-    // `port` doit être affecté séparément : le setter `host` conserve le port
-    // existant quand la valeur fournie n'en précise pas — on obtiendrait
-    // `https://app.localshark.io:3000` en repartant d'une URL de dev.
-    target.port = base.port
+    if (widgetBaseUrl) {
+      const base = new URL(widgetBaseUrl)
+      target.protocol = base.protocol
+      target.hostname = base.hostname
+      // `port` doit être affecté séparément : le setter `host` conserve le port
+      // existant quand la valeur fournie n'en précise pas — on obtiendrait
+      // `https://app.localshark.io:3000` en repartant d'une URL de dev.
+      target.port = base.port
+    }
+
+    for (const [key, value] of Object.entries(WIDGET_PARAMS)) {
+      target.searchParams.set(key, value)
+    }
 
     return target.toString()
   } catch {
@@ -256,7 +276,7 @@ export function toBusiness(dto: LsBusiness, options: MapperOptions = {}): Busine
 
     rating: dto.rating,
     reviewCount: dto.reviewCount,
-    reviewsWidgetUrl: rebaseWidgetUrl(dto.reviewsWidgetUrl, options.widgetBaseUrl),
+    reviewsWidgetUrl: buildWidgetUrl(dto.reviewsWidgetUrl, options.widgetBaseUrl),
 
     ...(location.latitude !== null ? { latitude: location.latitude } : {}),
     ...(location.longitude !== null ? { longitude: location.longitude } : {}),
