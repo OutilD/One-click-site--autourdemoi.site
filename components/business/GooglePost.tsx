@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { SafeImage } from '@/components/ui/SafeImage'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import type { Post, PostType } from '@/types'
@@ -33,7 +33,7 @@ export function GooglePost({ post, businessName, businessHref, className }: Goog
       )}
     >
       <div className="relative aspect-16/9 bg-ink-100">
-        <Image
+        <SafeImage
           src={post.image}
           alt={post.title}
           fill

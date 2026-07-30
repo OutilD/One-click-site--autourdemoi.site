@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { SafeImage } from '@/components/ui/SafeImage'
 import Link from 'next/link'
 import { Rating } from '@/components/ui/Rating'
 import type { Review } from '@/types'
@@ -27,7 +27,7 @@ export function ReviewCard({ review, businessName, businessHref, relativeDate, c
     <article className={cn('rounded-card border border-ink-200 bg-white p-5', className)}>
       <header className="flex items-start gap-3">
         {review.authorAvatar ? (
-          <Image
+          <SafeImage
             src={review.authorAvatar}
             alt=""
             width={40}

@@ -21,12 +21,18 @@ interface GalleryProps {
 /**
  * Galerie avec visionneuse plein écran.
  *
+ * Les images dont l'URL est morte sont retirées de la grille : une vignette
+ * cassée n'apporte rien et donne une page négligée. La visionneuse ne navigue
+ * donc qu'entre les images réellement affichables.
+ *
  * Gestion du clavier (Échap, flèches) et verrouillage du défilement délégués
  * aux hooks dédiés.
  */
 export function Gallery({ images, className }: GalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const visible = images
+  const [failed, setFailed] = useState<ReadonlySet<string>>(new Set())
+
+  const visible = images.filter((image) => !failed.has(image.url))
 
   const close = useCallback(() => setActiveIndex(null), [])
 
@@ -67,6 +73,7 @@ export function Gallery({ images, className }: GalleryProps) {
                 alt={image.alt}
                 fill
                 sizes="(min-width: 1024px) 300px, 45vw"
+                onError={() => setFailed((current) => new Set(current).add(image.url))}
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </button>

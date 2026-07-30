@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { SafeImage } from '@/components/ui/SafeImage'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { Rating } from '@/components/ui/Rating'
@@ -35,7 +35,7 @@ export function BusinessHeader({
     <header>
       <div className="relative aspect-21/9 max-h-80 w-full overflow-hidden rounded-card bg-ink-200">
         {business.coverImage ? (
-          <Image
+          <SafeImage
             src={business.coverImage}
             alt={altText}
             fill
@@ -51,7 +51,7 @@ export function BusinessHeader({
       <div className="relative -mt-12 px-4 sm:px-8">
         <div className="flex flex-col gap-4 rounded-card border border-ink-200 bg-white p-5 shadow-sm sm:flex-row sm:items-start sm:gap-6 sm:p-6">
           {business.logo ? (
-            <Image
+            <SafeImage
               src={business.logo}
               alt={`Logo de ${business.name}`}
               width={88}

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { SafeImage } from '@/components/ui/SafeImage'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { Rating } from '@/components/ui/Rating'
@@ -49,7 +49,7 @@ export function BusinessCard({
     >
       <div className="relative aspect-16/10 overflow-hidden bg-ink-100">
         {business.coverImage ? (
-          <Image
+          <SafeImage
             src={business.coverImage}
             alt={altText}
             fill
