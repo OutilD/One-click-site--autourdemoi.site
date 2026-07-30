@@ -5,6 +5,72 @@
 
 ---
 
+## ⚠️ Anomalies constatées en intégration
+
+Relevées le 30/07/2026 sur l'instance de développement. Le site est prêt à
+consommer ces données : les sections correspondantes s'affichent dès que les
+tableaux ne sont plus vides.
+
+### 1. `photos[]` et `posts[]` toujours vides — bloquant
+
+**Fiche de test** : `BLACKBOX Beaumarchais - Paris 11`
+(`googleCardId` `14716885943409932654`, slug `blackboxbeaumarchaisparis11`).
+
+| Source | Publications | Médias |
+| --- | --- | --- |
+| Base LocalShark (outils `list_posts` / `list_media`, statut `Published`) | **≥ 10** de 04/2025 à 09/2025 | **≥ 10** de 03/2025 à 05/2025 |
+| `GET /api/directory/{slug}` | `posts: []` | `photos: []` |
+| `GET /api/directory` | `latestPosts: []` | `latestPhotos: []` |
+| `GET /api/directory` → `stats` | `postCount: 0` | `photoCount: 0` |
+
+Les données existent donc bien en base : ce sont les jointures de l'endpoint
+annuaire qui ne les remontent pas.
+
+À vérifier en priorité : un filtre de date qui exclurait les contenus de 2025,
+ou une condition sur `publishedAt` — voir l'anomalie 2.
+
+### 2. `publishedAt` nul sur des médias publiés
+
+Tous les médias de cette fiche ont `status: "Published"` **et**
+`publishedAt: null`, avec un `scheduledFor` renseigné.
+
+Si la requête de l'endpoint annuaire filtre ou trie sur `publishedAt`, elle
+écarte silencieusement tous ces médias. C'est la piste la plus probable pour
+l'anomalie 1.
+
+Attendu : `publishedAt` toujours renseigné pour un contenu publié, avec repli
+sur `scheduledFor` (règle 4 ci-dessous).
+
+### 3. Champs hors contrat, à documenter
+
+`location.mapEmbedUrl` et `location.mapLinkUrl` sont apparus dans les réponses
+sans figurer au contrat. Ils sont désormais consommés par le site — merci de
+les y intégrer officiellement.
+
+⚠️ `mapEmbedUrl` contient une clé Google Maps en clair, qui se retrouve dans le
+HTML publié. C'est le fonctionnement normal de l'Embed API, mais **la clé doit
+être restreinte par référent HTTP** côté console Google, sans quoi le quota est
+consommable par n'importe qui.
+
+### 4. Écarts de type mineurs
+
+| Champ | Contrat | Observé |
+| --- | --- | --- |
+| `verified` | booléen | `null` |
+| `phone` | E.164 (`+33147006796`) | format national (`01 47 00 67 96`) |
+| `reviewsWidgetUrl` | absolue | pointe sur `http://localhost:3000` |
+
+Les trois sont absorbés côté site, mais méritent d'être alignés.
+
+### 5. Catégories secondaires absentes du référentiel
+
+`additionalCategories` renvoie `salon-de-coiffure`, qui ne figure pas dans
+`categories[]` de l'endpoint A — ce dernier ne liste que les catégories
+**principales**. Le site affiche donc ces catégories sans lien, faute de page
+correspondante. À confirmer : est-ce le comportement voulu ?
+
+---
+
 ## Contexte
 
 Un site annuaire externe (Next.js, rendu statique) doit publier les fiches
