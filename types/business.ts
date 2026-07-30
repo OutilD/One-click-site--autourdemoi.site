@@ -85,6 +85,10 @@ export interface Business {
 
   latitude?: number
   longitude?: number
+  /** Carte prête à embarquer, fournie par la source. */
+  mapEmbedUrl?: string
+  /** Lien externe vers la fiche cartographique. */
+  mapLinkUrl?: string
 
   logo?: string
   coverImage?: string
