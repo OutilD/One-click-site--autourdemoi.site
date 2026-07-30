@@ -71,11 +71,8 @@ export interface Business {
 
   address?: string
   postalCode?: string
-  /** `null` pour un artisan mobile : le rattachement se fait via `servedCitySlugs`. */
-  citySlug: Slug | null
+  /** Commune, conservée pour l'affichage de l'adresse et `addressLocality`. */
   cityName?: string
-  /** Villes desservies — seul rattachement d'un établissement sans adresse. */
-  servedCitySlugs: Slug[]
   country: string
 
   phone?: string
@@ -127,8 +124,6 @@ export interface BusinessQuery {
   /** Recherche plein texte sur le nom, la description et les services. */
   q?: string
   categorySlug?: Slug
-  /** Correspond à la ville principale **ou** à une ville desservie. */
-  citySlug?: Slug
   /** Note minimale, de 0 à 5. Exclut les fiches sans avis. */
   minRating?: number
   priceLevel?: PriceLevel

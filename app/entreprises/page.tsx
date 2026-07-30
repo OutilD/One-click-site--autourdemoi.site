@@ -26,7 +26,7 @@ import {
   buildOpeningStatuses,
   toSelectOptions,
 } from '@/lib/view-helpers'
-import { BusinessRepository, CategoryRepository, CityRepository } from '@/repositories'
+import { BusinessRepository, CategoryRepository } from '@/repositories'
 import { formatNumber, pluralize } from '@/utils/format'
 
 const PER_PAGE = siteConfig.defaultPerPage
@@ -40,7 +40,6 @@ function readParams(raw: Record<string, string | string[] | undefined>): Directo
   return {
     q: firstValue(raw.q),
     categorie: firstValue(raw.categorie),
-    ville: firstValue(raw.ville),
     note: firstValue(raw.note),
     tri: firstValue(raw.tri),
     page: firstValue(raw.page),
@@ -69,22 +68,17 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
   const now = new Date()
   const params = readParams(await searchParams)
 
-  const [categories, cities] = await Promise.all([
-    CategoryRepository.getAllWithCounts(),
-    CityRepository.getAllWithCounts(),
-  ])
+  const categories = await CategoryRepository.getAllWithCounts()
 
   const result = await BusinessRepository.search(toBusinessQuery(params, {}, PER_PAGE))
   const categoryLabels = buildCategoryLabels(categories)
   const openingStatuses = buildOpeningStatuses(result.items, now)
 
   const activeCategory = categories.find((category) => category.slug === params.categorie)
-  const activeCity = cities.find((city) => city.slug === params.ville)
 
   const baseFilters = {
     q: params.q ?? '',
     categorie: params.categorie ?? '',
-    ville: params.ville ?? '',
     note: params.note ?? '',
     tri: params.tri ?? 'pertinence',
   }
@@ -106,7 +100,6 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
       <div className="mt-6">
         <h1 className="text-3xl font-bold tracking-tight text-ink-900">
           {activeCategory ? activeCategory.pluralName : 'Toutes les entreprises'}
-          {activeCity && <span className="text-ink-500"> à {activeCity.name}</span>}
         </h1>
         <p className="mt-2 text-ink-600">
           {formatNumber(result.total)} {pluralize(result.total, 'établissement')}{' '}
@@ -122,11 +115,7 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
       </div>
 
       <div className="mt-6">
-        <SearchBar
-          cityOptions={toSelectOptions(cities, (city) => city.name)}
-          defaultQuery={params.q}
-          defaultCity={params.ville}
-        />
+        <SearchBar defaultQuery={params.q} />
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
@@ -134,7 +123,6 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
           action="/entreprises"
           values={baseFilters}
           categoryOptions={toSelectOptions(categories, (category) => category.pluralName)}
-          cityOptions={toSelectOptions(cities, (city) => city.name)}
           ratingOptions={RATING_OPTIONS}
           resetHref={routes.businesses()}
           className="h-fit lg:sticky lg:top-24"
@@ -152,7 +140,6 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
               hiddenFields={{
                 q: baseFilters.q,
                 categorie: baseFilters.categorie,
-                ville: baseFilters.ville,
                 note: baseFilters.note,
               }}
             />

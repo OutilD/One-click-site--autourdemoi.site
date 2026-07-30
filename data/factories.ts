@@ -286,11 +286,7 @@ export function buildBusiness(seed: BusinessSeed, index: number): Business {
 
     address: seed.street,
     postalCode: city.postalCode,
-    citySlug: city.slug,
     cityName: city.name,
-    // Les fiches de démonstration ont toutes une adresse : aucune zone
-    // desservie. En mode API, ce champ porte les artisans mobiles.
-    servedCitySlugs: [],
     country: 'France',
 
     phone,

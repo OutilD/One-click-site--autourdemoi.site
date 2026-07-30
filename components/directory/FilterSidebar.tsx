@@ -9,7 +9,6 @@ import { formatNumber } from '@/utils/format'
 export interface FilterValues {
   q: string
   categorie: string
-  ville: string
   note: string
   tri: string
 }
@@ -18,7 +17,6 @@ interface FilterSidebarProps {
   action: string
   values: FilterValues
   categoryOptions: SelectOption[]
-  cityOptions: SelectOption[]
   ratingOptions: SelectOption[]
   /** URL de réinitialisation (page de listing sans paramètre). */
   resetHref: string
@@ -36,7 +34,6 @@ export function FilterSidebar({
   action,
   values,
   categoryOptions,
-  cityOptions,
   ratingOptions,
   resetHref,
   className,
@@ -47,7 +44,7 @@ export function FilterSidebar({
     formRef.current?.requestSubmit()
   }
 
-  const hasActiveFilter = Boolean(values.categorie || values.ville || values.note)
+  const hasActiveFilter = Boolean(values.categorie || values.note)
 
   return (
     <form
@@ -88,30 +85,6 @@ export function FilterSidebar({
               label={option.label}
               count={option.count}
               checked={values.categorie === option.value}
-              onChange={autoSubmit}
-            />
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="mt-6 border-t border-ink-100 pt-5">
-        <legend className="text-sm font-semibold text-ink-900">Ville</legend>
-        <div className="mt-2 space-y-1">
-          <FilterRadio
-            name="ville"
-            value=""
-            label="Toutes les villes"
-            checked={values.ville === ''}
-            onChange={autoSubmit}
-          />
-          {cityOptions.map((option) => (
-            <FilterRadio
-              key={option.value}
-              name="ville"
-              value={option.value}
-              label={option.label}
-              count={option.count}
-              checked={values.ville === option.value}
               onChange={autoSubmit}
             />
           ))}

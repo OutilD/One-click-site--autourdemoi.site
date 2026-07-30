@@ -11,10 +11,8 @@ import type {
   LsPostType,
   LsSpecialHour,
 } from './types'
-import { departmentFromPostalCode } from '@/lib/geo/departments'
 import type {
   Business,
-  City,
   DayKey,
   OpeningHours,
   Photo,
@@ -90,66 +88,6 @@ export function toSpecialHours(entries: LsSpecialHour[]): SpecialHours[] {
     ...(entry.openTime ? { open: entry.openTime } : {}),
     ...(entry.closeTime ? { close: entry.closeTime } : {}),
   }))
-}
-
-/** Slug de ville, dérivé du nom — l'API n'en fournit pas. */
-export function toCitySlug(name: string): string {
-  return slugify(name)
-}
-
-/**
- * Villes rencontrées dans le jeu de fiches.
- *
- * L'API ne fournit pas de référentiel : il se déduit des adresses et des zones
- * desservies. Le département et la région viennent du code postal
- * (`lib/geo/departments.ts`) ; ils restent absents pour une ville seulement
- * desservie, l'API ne renvoyant alors aucun code postal.
- */
-export function collectCities(businesses: LsBusiness[]): City[] {
-  const cities = new Map<string, City>()
-
-  const upsert = (name: string, postalCode: string | null, coords?: { lat: number; lng: number }) => {
-    const trimmed = name.trim()
-    if (!trimmed) return
-
-    const slug = toCitySlug(trimmed)
-    if (!slug) return
-
-    const existing = cities.get(slug)
-    const department = departmentFromPostalCode(postalCode)
-
-    // Une ville peut apparaître d'abord comme zone desservie (sans code postal)
-    // puis comme adresse : on complète l'entrée au fil des rencontres.
-    cities.set(slug, {
-      id: `city-${slug}`,
-      slug,
-      name: existing?.name ?? trimmed,
-      ...(existing ?? {}),
-      ...(postalCode ? { postalCode } : {}),
-      ...(department
-        ? { department: department.name, departmentCode: department.code, region: department.region }
-        : {}),
-      ...(coords ? { latitude: coords.lat, longitude: coords.lng } : {}),
-    })
-  }
-
-  for (const business of businesses) {
-    const { city, postalCode, latitude, longitude, servedCities } = business.location
-
-    if (city) {
-      upsert(
-        city,
-        postalCode,
-        latitude !== null && longitude !== null ? { lat: latitude, lng: longitude } : undefined,
-      )
-    }
-
-    for (const served of servedCities) {
-      upsert(served.name, served.postalCode)
-    }
-  }
-
-  return [...cities.values()].sort((a, b) => a.name.localeCompare(b.name, 'fr'))
 }
 
 /**
@@ -255,9 +193,7 @@ export function toBusiness(dto: LsBusiness, options: MapperOptions = {}): Busine
 
     ...(location.address ? { address: location.address } : {}),
     ...(location.postalCode ? { postalCode: location.postalCode } : {}),
-    citySlug: location.city ? toCitySlug(location.city) : null,
     ...(location.city ? { cityName: location.city } : {}),
-    servedCitySlugs: location.servedCities.map((served) => toCitySlug(served.name)).filter(Boolean),
     country: 'France',
 
     ...(dto.phone ? { phone: dto.phone } : {}),

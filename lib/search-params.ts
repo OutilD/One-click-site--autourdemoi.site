@@ -4,7 +4,6 @@ import type { BusinessQuery, BusinessSort } from '@/types'
 export interface DirectorySearchParams {
   q?: string
   categorie?: string
-  ville?: string
   note?: string
   tri?: string
   page?: string
@@ -52,7 +51,6 @@ export function toBusinessQuery(
   return {
     q: params.q || undefined,
     categorySlug: params.categorie || undefined,
-    citySlug: params.ville || undefined,
     minRating: parseRating(params.note),
     sort: parseSort(params.tri),
     page: parsePage(params.page),
@@ -75,5 +73,5 @@ export function buildQueryString(params: Record<string, string | number | undefi
 
 /** Vrai si au moins un filtre est actif — sert à décider de la désindexation. */
 export function hasActiveFilters(params: DirectorySearchParams): boolean {
-  return Boolean(params.q || params.categorie || params.ville || params.note)
+  return Boolean(params.q || params.categorie || params.note)
 }

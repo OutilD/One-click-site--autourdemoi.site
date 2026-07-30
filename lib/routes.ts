@@ -18,12 +18,6 @@ export const routes = {
   business: (slug: Slug) => `/entreprise/${slug}`,
   categories: () => '/categories',
   category: (slug: Slug) => `/${slug}`,
-  cities: () => '/villes',
-  city: (slug: Slug) => `/${slug}`,
-  /** Page combinée catégorie × ville : `/restaurants/paris`. */
-  categoryInCity: (categorySlug: Slug, citySlug: Slug) => `/${categorySlug}/${citySlug}`,
-  /** Page combinée ville × catégorie : `/paris/restaurants`. */
-  cityCategory: (citySlug: Slug, categorySlug: Slug) => `/${citySlug}/${categorySlug}`,
   search: (q: string) => `/entreprises?q=${encodeURIComponent(q)}`,
 } as const
 

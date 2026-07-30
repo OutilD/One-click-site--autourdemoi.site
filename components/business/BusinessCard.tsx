@@ -19,14 +19,10 @@ interface BusinessCardProps {
   className?: string
 }
 
-/** Ligne de localisation : adresse et ville quand elles existent. */
+/** Ligne de localisation : adresse et commune quand elles existent. */
 function locationLabel(business: Business): string | null {
   const parts = [business.address, business.cityName].filter(Boolean)
-  if (parts.length > 0) return parts.join(', ')
-
-  // Artisan mobile : on annonce la zone d'intervention plutôt que rien.
-  if (business.servedCitySlugs.length > 0) return 'Intervient dans votre secteur'
-  return null
+  return parts.length > 0 ? parts.join(', ') : null
 }
 
 /** Carte entreprise réutilisée sur l'accueil, les listings et les pages locales. */

@@ -18,9 +18,9 @@ import { BusinessGrid } from '@/components/directory/BusinessGrid'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbJsonLd, faqJsonLd, localBusinessJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
-import { buildMetadata, businessArea, businessDescription, businessTitle } from '@/lib/seo'
+import { buildMetadata, businessDescription, businessTitle } from '@/lib/seo'
 import { buildCategoryLabels, buildOpeningStatuses, currentDayKey, hasOpeningHours } from '@/lib/view-helpers'
-import { BusinessRepository, CategoryRepository, CityRepository, ReviewRepository } from '@/repositories'
+import { BusinessRepository, CategoryRepository, ReviewRepository } from '@/repositories'
 import { formatRating, formatRelativeDate } from '@/utils/format'
 import { getOpeningStatus } from '@/utils/opening-hours'
 
@@ -48,17 +48,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const category = business.categorySlug ? await CategoryRepository.getBySlug(business.categorySlug) : null
-  const servedCity = business.servedCitySlugs[0]
-    ? await CityRepository.getBySlug(business.servedCitySlugs[0])
-    : null
-  const areaName = businessArea(business, servedCity?.name)
 
   return buildMetadata({
-    title: businessTitle(business, category?.name, areaName),
-    description: businessDescription(business, category?.name, areaName),
+    title: businessTitle(business, category?.name, business.cityName),
+    description: businessDescription(business, category?.name, business.cityName),
     path: routes.business(business.slug),
     ...(business.coverImage ? { image: business.coverImage } : {}),
-    keywords: [business.name, category?.name, areaName].filter((value): value is string => Boolean(value)),
+    keywords: [business.name, category?.name, business.cityName].filter((value): value is string => Boolean(value)),
   })
 }
 
@@ -71,10 +67,8 @@ export default async function BusinessPage({ params }: PageProps) {
   const { business, posts, photos, reviews } = detail
   const now = new Date()
 
-  const [category, city, servedCity, similar, categories, breakdown] = await Promise.all([
+  const [category, similar, categories, breakdown] = await Promise.all([
     business.categorySlug ? CategoryRepository.getBySlug(business.categorySlug) : null,
-    business.citySlug ? CityRepository.getBySlug(business.citySlug) : null,
-    business.servedCitySlugs[0] ? CityRepository.getBySlug(business.servedCitySlugs[0]) : null,
     BusinessRepository.getSimilar(business, 3),
     CategoryRepository.getAll(),
     // Distribution reconstituée : n'a de sens qu'avec les avis natifs, le
@@ -82,7 +76,6 @@ export default async function BusinessPage({ params }: PageProps) {
     reviews.length > 0 ? ReviewRepository.getBreakdown(business.slug) : null,
   ])
 
-  const areaName = businessArea(business, servedCity?.name)
   const status = hasOpeningHours(business) ? getOpeningStatus(business.openingHours, now) : null
   const categoryLabels = buildCategoryLabels(categories)
   const similarStatuses = buildOpeningStatuses(similar, now)
@@ -103,7 +96,6 @@ export default async function BusinessPage({ params }: PageProps) {
   const breadcrumbItems = [
     { label: 'Accueil', href: '/' },
     ...(category ? [{ label: category.name, href: routes.category(category.slug) }] : []),
-    ...(city ?? servedCity ? [{ label: (city ?? servedCity)!.name, href: routes.city((city ?? servedCity)!.slug) }] : []),
     { label: business.name },
   ]
 
@@ -118,8 +110,7 @@ export default async function BusinessPage({ params }: PageProps) {
           business={business}
           categoryLabel={category?.name}
           categoryHref={category ? routes.category(category.slug) : undefined}
-          cityLabel={(city ?? servedCity)?.name}
-          cityHref={(city ?? servedCity) ? routes.city((city ?? servedCity)!.slug) : undefined}
+          cityLabel={business.cityName}
           openingLabel={status?.label ?? null}
           isOpen={status?.isOpen ?? false}
         />
@@ -205,7 +196,7 @@ export default async function BusinessPage({ params }: PageProps) {
                   label={business.name}
                   address={
                     [business.address, business.postalCode, business.cityName].filter(Boolean).join(', ') ||
-                    (areaName ? `Intervient à ${areaName}` : undefined)
+                    undefined
                   }
                   embedUrl={business.mapEmbedUrl}
                   linkUrl={business.mapLinkUrl}
@@ -281,11 +272,7 @@ export default async function BusinessPage({ params }: PageProps) {
         {similar.length > 0 && category && (
           <section className="mt-16 border-t border-ink-200 pt-12" aria-labelledby="similar-heading">
             <SectionHeading
-              title={
-                areaName
-                  ? `Autres ${category.pluralName.toLowerCase()} à ${areaName}`
-                  : `Autres ${category.pluralName.toLowerCase()}`
-              }
+              title={`Autres ${category.pluralName.toLowerCase()}`}
               description="Des établissements comparables à proximité."
               action={{ label: 'Voir tout', href: routes.category(category.slug) }}
             />

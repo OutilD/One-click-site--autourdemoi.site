@@ -1,4 +1,4 @@
-import type { Business, Category, City, SelectOption } from '@/types'
+import type { Business, Category, SelectOption } from '@/types'
 import type { OpeningStatusMap } from '@/components/directory/BusinessGrid'
 import { DAY_ORDER, dayKeyFromDate, getOpeningStatus } from '@/utils/opening-hours'
 
@@ -53,11 +53,6 @@ export function toSelectOptions<T extends { slug: string; businessCount?: number
     label: getLabel(item),
     ...(item.businessCount !== undefined ? { count: item.businessCount } : {}),
   }))
-}
-
-/** « Casteljaloux (47) » quand le département est connu, « Casteljaloux » sinon. */
-export function cityLabel(city: City): string {
-  return city.departmentCode ? `${city.name} (${city.departmentCode})` : city.name
 }
 
 /** Options de tri exposées dans l'interface, mappées vers `BusinessSort`. */

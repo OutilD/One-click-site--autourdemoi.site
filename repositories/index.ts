@@ -15,7 +15,6 @@
  */
 export { BusinessRepository } from './BusinessRepository'
 export { CategoryRepository } from './CategoryRepository'
-export { CityRepository } from './CityRepository'
 export { PhotoRepository } from './PhotoRepository'
 export { PostRepository } from './PostRepository'
 export { ReviewRepository } from './ReviewRepository'

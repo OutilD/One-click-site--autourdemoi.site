@@ -74,29 +74,9 @@ export class BusinessRepository {
     return this.find({ categorySlug, sort: 'relevance', perPage: limit })
   }
 
-  static async getByCity(citySlug: Slug, limit?: number): Promise<Business[]> {
-    return this.find({ citySlug, sort: 'relevance', perPage: limit })
-  }
-
-  /**
-   * Fiches similaires : même catégorie, même ville en priorité,
-   * puis complétées par la même catégorie ailleurs.
-   */
+  /** Fiches similaires : même catégorie, les mieux classées. */
   static async getSimilar(business: Business, limit = 3): Promise<Business[]> {
     if (!business.categorySlug) return []
-
-    const citySlug = business.citySlug ?? business.servedCitySlugs[0]
-
-    const sameCity = citySlug
-      ? await this.find({
-          categorySlug: business.categorySlug,
-          citySlug,
-          excludeId: business.id,
-          sort: 'relevance',
-        })
-      : []
-
-    if (sameCity.length >= limit) return sameCity.slice(0, limit)
 
     const sameCategory = await this.find({
       categorySlug: business.categorySlug,
@@ -104,8 +84,7 @@ export class BusinessRepository {
       sort: 'relevance',
     })
 
-    const seen = new Set(sameCity.map((item) => item.id))
-    return [...sameCity, ...sameCategory.filter((item) => !seen.has(item.id))].slice(0, limit)
+    return sameCategory.slice(0, limit)
   }
 
   /** Nombre de fiches par slug de catégorie. */
@@ -115,21 +94,6 @@ export class BusinessRepository {
     return businesses.reduce<Record<string, number>>((counts, business) => {
       if (!business.categorySlug) return counts
       counts[business.categorySlug] = (counts[business.categorySlug] ?? 0) + 1
-      return counts
-    }, {})
-  }
-
-  /**
-   * Nombre de fiches par slug de ville.
-   * Une fiche compte pour sa ville d'adresse **et** pour chaque ville desservie.
-   */
-  static async countByCity(): Promise<Record<string, number>> {
-    const { businesses } = await getSnapshot()
-
-    return businesses.reduce<Record<string, number>>((counts, business) => {
-      for (const slug of citySlugsOf(business)) {
-        counts[slug] = (counts[slug] ?? 0) + 1
-      }
       return counts
     }, {})
   }
@@ -144,42 +108,15 @@ export class BusinessRepository {
     return businesses.map((business) => business.slug)
   }
 
-  /**
-   * Couples catégorie × ville réellement peuplés.
-   * Évite de générer des pages combinées vides (mauvais signal SEO).
-   */
-  static async getCategoryCityPairs(): Promise<{ categorySlug: Slug; citySlug: Slug }[]> {
-    const { businesses } = await getSnapshot()
-    const pairs = new Map<string, { categorySlug: Slug; citySlug: Slug }>()
-
-    for (const business of businesses) {
-      if (!business.categorySlug) continue
-      for (const citySlug of citySlugsOf(business)) {
-        const key = `${business.categorySlug}/${citySlug}`
-        if (!pairs.has(key)) pairs.set(key, { categorySlug: business.categorySlug, citySlug })
-      }
-    }
-
-    return [...pairs.values()]
-  }
 }
 
 // ───────────────────────────── Logique interne ─────────────────────────────
-
-/** Villes auxquelles une fiche est rattachée : adresse + zones desservies. */
-function citySlugsOf(business: Business): string[] {
-  const slugs = new Set<string>()
-  if (business.citySlug) slugs.add(business.citySlug)
-  for (const slug of business.servedCitySlugs) slugs.add(slug)
-  return [...slugs]
-}
 
 function applyFilters(source: Business[], query: BusinessQuery): Business[] {
   const term = query.q ? normalizeSearchTerm(query.q) : null
 
   return source.filter((business) => {
     if (query.categorySlug && business.categorySlug !== query.categorySlug) return false
-    if (query.citySlug && !citySlugsOf(business).includes(query.citySlug)) return false
     // Une fiche sans avis n'a pas de note : elle est exclue d'un filtre par note.
     if (query.minRating !== undefined && (business.rating === null || business.rating < query.minRating)) {
       return false
@@ -201,7 +138,6 @@ function matchesSearchTerm(business: Business, term: string): boolean {
       business.description ?? '',
       business.cityName ?? '',
       business.categorySlug ?? '',
-      business.servedCitySlugs.join(' '),
       business.services.join(' '),
     ].join(' '),
   )

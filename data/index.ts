@@ -7,7 +7,6 @@
  */
 export { businesses, businessesById, businessesBySlug } from './businesses'
 export { categories, categoriesBySlug } from './categories'
-export { cities, citiesBySlug } from './cities'
 export { photos, photosByBusinessId } from './photos'
 export { posts, postsByBusinessId } from './posts'
 export { reviews, reviewsByBusinessId } from './reviews'

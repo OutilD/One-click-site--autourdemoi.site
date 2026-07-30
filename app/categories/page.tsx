@@ -7,8 +7,7 @@ import { breadcrumbJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
 import { buildMetadata } from '@/lib/seo'
 import { siteConfig } from '@/lib/site'
-import { CategoryRepository, CityRepository } from '@/repositories'
-import Link from 'next/link'
+import { CategoryRepository } from '@/repositories'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Toutes les catégories de professionnels',
@@ -17,10 +16,7 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default async function CategoriesPage() {
-  const [categories, cities] = await Promise.all([
-    CategoryRepository.getAllWithCounts(),
-    CityRepository.getAllWithCounts(),
-  ])
+  const categories = await CategoryRepository.getAllWithCounts()
 
   const breadcrumbItems = [
     { label: 'Accueil', href: '/' },
@@ -54,32 +50,6 @@ export default async function CategoriesPage() {
           />
         ))}
       </div>
-
-      {/* Maillage interne catégorie × ville — cœur de la stratégie SEO locale. */}
-      <section className="mt-16 border-t border-ink-200 pt-10" aria-labelledby="combos-heading">
-        <h2 id="combos-heading" className="text-2xl font-bold tracking-tight text-ink-900">
-          Rechercher par métier et par ville
-        </h2>
-        <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((category) => (
-            <div key={category.slug}>
-              <h3 className="text-sm font-semibold text-ink-900">{category.pluralName}</h3>
-              <ul className="mt-2 space-y-1.5">
-                {cities.map((city) => (
-                  <li key={city.slug}>
-                    <Link
-                      href={routes.categoryInCity(category.slug, city.slug)}
-                      className="text-sm text-ink-600 hover:text-brand-700 hover:underline"
-                    >
-                      {category.pluralName} à {city.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
     </Container>

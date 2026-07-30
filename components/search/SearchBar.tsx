@@ -2,43 +2,30 @@
 
 import { useRouter } from 'next/navigation'
 import { useId, useState, type FormEvent } from 'react'
-import type { SelectOption } from '@/types'
 import { cn } from '@/utils/cn'
 
 interface SearchBarProps {
-  /** Villes proposées dans le sélecteur — jamais lues depuis `/data`. */
-  cityOptions: SelectOption[]
-  /** Valeurs initiales, pour repeupler le formulaire depuis l'URL. */
+  /** Valeur initiale, pour repeupler le formulaire depuis l'URL. */
   defaultQuery?: string
-  defaultCity?: string
   size?: 'md' | 'lg'
   className?: string
 }
 
 /**
- * Barre de recherche : terme libre + ville.
+ * Barre de recherche.
  *
  * Composant client (navigation programmatique), mais le formulaire reste
  * fonctionnel sans JavaScript grâce à `method="get"` sur `/entreprises`.
  */
-export function SearchBar({
-  cityOptions,
-  defaultQuery = '',
-  defaultCity = '',
-  size = 'md',
-  className,
-}: SearchBarProps) {
+export function SearchBar({ defaultQuery = '', size = 'md', className }: SearchBarProps) {
   const router = useRouter()
   const queryId = useId()
-  const cityId = useId()
   const [query, setQuery] = useState(defaultQuery)
-  const [city, setCity] = useState(defaultCity)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const params = new URLSearchParams()
     if (query.trim()) params.set('q', query.trim())
-    if (city) params.set('ville', city)
     const search = params.toString()
     router.push(search ? `/entreprises?${search}` : '/entreprises')
   }
@@ -75,28 +62,6 @@ export function SearchBar({
         />
       </div>
 
-      <div className="flex items-center gap-2 border-ink-200 px-3 sm:border-l">
-        <span aria-hidden="true" className="text-ink-400">
-          📍
-        </span>
-        <label htmlFor={cityId} className="sr-only">
-          Ville
-        </label>
-        <select
-          id={cityId}
-          name="ville"
-          value={city}
-          onChange={(event) => setCity(event.target.value)}
-          className={cn('w-full min-w-40 bg-transparent text-ink-900 outline-none', fieldHeight)}
-        >
-          <option value="">Toutes les villes</option>
-          {cityOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
 
       <button
         type="submit"

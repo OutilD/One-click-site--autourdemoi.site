@@ -2,7 +2,6 @@ import { assertDirectoryHealth, localSharkClient } from '@/lib/localshark/client
 import { getLocalSharkConfig } from '@/lib/localshark/config'
 import { buildCategory } from '@/lib/localshark/category-presentation'
 import {
-  collectCities,
   toBusiness,
   toBusinessDetail,
   toFeedPhoto,
@@ -49,7 +48,6 @@ export const localSharkSource: DirectorySource = {
       return {
         businesses: [],
         categories: [],
-        cities: [],
         latestPosts: [],
         latestPhotos: [],
         latestReviews: [],
@@ -71,7 +69,6 @@ export const localSharkSource: DirectorySource = {
     return {
       businesses,
       categories: mergeMissingCategories(declared, directory.businesses),
-      cities: collectCities(directory.businesses),
       latestPosts: directory.latestPosts.map(toFeedPost),
       latestPhotos: directory.latestPhotos.map(toFeedPhoto),
       // Aucun flux d'avis côté API : le bloc correspondant est masqué.

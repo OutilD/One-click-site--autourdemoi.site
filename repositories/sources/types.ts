@@ -1,4 +1,4 @@
-import type { Business, Category, City, Photo, Post, Review } from '@/types'
+import type { Business, Category, Photo, Post, Review } from '@/types'
 import type { DataSourceMode } from '@/lib/localshark/config'
 
 export interface DirectoryStats {
@@ -16,7 +16,6 @@ export interface DirectoryStats {
 export interface DirectorySnapshot {
   businesses: Business[]
   categories: Category[]
-  cities: City[]
   latestPosts: Post[]
   latestPhotos: Photo[]
   latestReviews: Review[]

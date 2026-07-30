@@ -1,6 +1,5 @@
 import { businesses, businessesById, businessesBySlug } from '@/data/businesses'
 import { categories } from '@/data/categories'
-import { cities } from '@/data/cities'
 import { photos, photosByBusinessId } from '@/data/photos'
 import { posts, postsByBusinessId } from '@/data/posts'
 import { reviews, reviewsByBusinessId } from '@/data/reviews'
@@ -36,7 +35,6 @@ export const staticSource: DirectorySource = {
     return {
       businesses,
       categories,
-      cities,
       latestPosts: byDateDesc(posts).slice(0, 12),
       latestPhotos: diversePhotos(photos, 12),
       latestReviews: byDateDesc(reviews).slice(0, 12),

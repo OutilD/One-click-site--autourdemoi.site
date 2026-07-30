@@ -4,7 +4,6 @@ import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { SearchBar } from '@/components/search/SearchBar'
 import { CategoryCard } from '@/components/directory/CategoryCard'
-import { CityCard } from '@/components/directory/CityCard'
 import { BusinessGrid } from '@/components/directory/BusinessGrid'
 import { ReviewCard } from '@/components/business/ReviewCard'
 import { GooglePost } from '@/components/business/GooglePost'
@@ -15,11 +14,10 @@ import { faqJsonLd, itemListJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
 import { buildMetadata } from '@/lib/seo'
 import { siteConfig } from '@/lib/site'
-import { buildCategoryLabels, buildOpeningStatuses, toSelectOptions } from '@/lib/view-helpers'
+import { buildCategoryLabels, buildOpeningStatuses } from '@/lib/view-helpers'
 import {
   BusinessRepository,
   CategoryRepository,
-  CityRepository,
   PhotoRepository,
   PostRepository,
   ReviewRepository,
@@ -58,10 +56,9 @@ const HOME_FAQ = [
 export default async function HomePage() {
   const now = new Date()
 
-  const [categories, cities, featured, topRated, latestReviews, latestPosts, latestPhotos, totalBusinesses] =
+  const [categories, featured, topRated, latestReviews, latestPosts, latestPhotos, totalBusinesses] =
     await Promise.all([
       CategoryRepository.getAllWithCounts(),
-      CityRepository.getAllWithCounts(),
       BusinessRepository.getFeatured(6),
       BusinessRepository.find({ sort: 'rating', perPage: 6 }),
       ReviewRepository.getLatest(3),
@@ -93,7 +90,7 @@ export default async function HomePage() {
         <Container size="wide" className="py-16 sm:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">
-              {formatNumber(totalBusinesses)} établissements · {cities.length} villes ·{' '}
+              {formatNumber(totalBusinesses)} établissements · {categories.length} catégories ·{' '}
               {formatNumber(totalReviews)} avis
             </p>
             <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink-900 sm:text-5xl">
@@ -106,7 +103,7 @@ export default async function HomePage() {
           </div>
 
           <div className="mx-auto mt-8 max-w-3xl">
-            <SearchBar cityOptions={toSelectOptions(cities, (city) => city.name)} size="lg" />
+            <SearchBar size="lg" />
             <p className="mt-3 text-center text-sm text-ink-500">
               Recherches fréquentes :{' '}
               {categories.slice(0, 4).map((category, index) => (
@@ -159,27 +156,6 @@ export default async function HomePage() {
           className="mt-8"
         />
         <JsonLd data={itemListJsonLd(highlighted, 'Entreprises mises en avant')} />
-      </Container>
-
-      {/* ─────────────────────────────── Villes ───────────────────────────── */}
-      <Container size="wide" as="section" className="py-14">
-        <SectionHeading
-          title="Explorez par ville"
-          description="L’annuaire couvre les principales agglomérations françaises."
-          action={{ label: 'Toutes les villes', href: routes.cities() }}
-        />
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {cities.map((city) => (
-            <CityCard
-              key={city.slug}
-              name={city.name}
-              href={routes.city(city.slug)}
-              image={city.coverImage}
-              businessCount={city.businessCount}
-              departmentCode={city.departmentCode}
-            />
-          ))}
-        </div>
       </Container>
 
       {/* ───────────────────────────── Derniers avis ──────────────────────── */}

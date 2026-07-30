@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
 import { siteConfig } from '@/lib/site'
-import { CategoryRepository, CityRepository } from '@/repositories'
+import { CategoryRepository } from '@/repositories'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -40,15 +40,11 @@ const BUILD_YEAR = new Date().getFullYear()
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Les données de navigation transitent par les repositories, jamais par `/data`.
-  const [categories, cities] = await Promise.all([
-    CategoryRepository.getPopular(6),
-    CityRepository.getPopular(6),
-  ])
+  const categories = await CategoryRepository.getPopular(8)
 
   const navLinks: NavLink[] = [
     { href: routes.businesses(), label: 'Toutes les entreprises' },
     { href: routes.categories(), label: 'Catégories' },
-    { href: routes.cities(), label: 'Villes' },
     ...categories.slice(0, 3).map((category) => ({
       href: routes.category(category.slug),
       label: category.pluralName,
@@ -64,15 +60,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       })),
     },
     {
-      title: 'Villes couvertes',
-      links: cities.map((city) => ({ href: routes.city(city.slug), label: city.name })),
-    },
-    {
       title: 'L’annuaire',
       links: [
         { href: routes.businesses(), label: 'Toutes les entreprises' },
         { href: routes.categories(), label: 'Toutes les catégories' },
-        { href: routes.cities(), label: 'Toutes les villes' },
         { href: routes.businesses({ tri: 'note' }), label: 'Les mieux notés' },
       ],
     },
