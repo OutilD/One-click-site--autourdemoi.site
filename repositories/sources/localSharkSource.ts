@@ -23,10 +23,11 @@ import type { Category } from '@/types'
  * ⚠️ Les avis ne transitent pas par l'API : ils sont rendus par le widget
  * iframe dont l'URL est portée par `business.reviewsWidgetUrl`.
  */
-/** Options passées aux mappers : origine de rebasage du widget d'avis. */
+/** Options passées aux mappers : origine et paramètres du widget d'avis. */
 function mapperOptions() {
   const config = getLocalSharkConfig()
-  return config ? { widgetBaseUrl: config.widgetBaseUrl } : {}
+  if (!config) return {}
+  return { widgetBaseUrl: config.widgetBaseUrl, widgetParams: config.widgetParams }
 }
 
 export const localSharkSource: DirectorySource = {
