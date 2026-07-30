@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 
 interface FooterColumn {
   title: string
@@ -26,7 +28,7 @@ export function Footer({ columns, siteName, tagline, year }: FooterProps) {
                 aria-hidden="true"
                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white"
               >
-                ◎
+                <Icon icon={icons.address} className="h-3.5 w-3.5" />
               </span>
               {siteName}
             </Link>

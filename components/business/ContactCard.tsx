@@ -1,5 +1,7 @@
 import type { Business } from '@/types'
 import { Button } from '@/components/ui/Button'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { formatPhone, formatWebsiteLabel, toTelHref } from '@/utils/format'
 
@@ -8,13 +10,13 @@ interface ContactCardProps {
   className?: string
 }
 
-const SOCIAL_LABELS: Record<string, string> = {
-  facebook: 'Facebook',
-  instagram: 'Instagram',
-  linkedin: 'LinkedIn',
-  youtube: 'YouTube',
-  tiktok: 'TikTok',
-}
+const SOCIAL_NETWORKS = {
+  facebook: { label: 'Facebook', icon: icons.facebook },
+  instagram: { label: 'Instagram', icon: icons.instagram },
+  linkedin: { label: 'LinkedIn', icon: icons.linkedin },
+  youtube: { label: 'YouTube', icon: icons.youtube },
+  tiktok: { label: 'TikTok', icon: icons.tiktok },
+} as const
 
 /**
  * Coordonnées et boutons d'action d'un établissement.
@@ -44,8 +46,8 @@ export function ContactCard({ business, className }: ContactCardProps) {
       <dl className="mt-4 space-y-3 text-sm">
         {addressParts.length > 0 && (
           <div className="flex gap-3">
-            <dt className="w-6 shrink-0 text-center" aria-label="Adresse">
-              <span aria-hidden="true">📍</span>
+            <dt className="w-6 shrink-0 text-center text-ink-400" aria-label="Adresse">
+              <Icon icon={icons.address} />
             </dt>
             <dd className="text-ink-700">
               {addressParts.map((part) => (
@@ -59,8 +61,8 @@ export function ContactCard({ business, className }: ContactCardProps) {
 
         {business.phone && (
           <div className="flex gap-3">
-            <dt className="w-6 shrink-0 text-center" aria-label="Téléphone">
-              <span aria-hidden="true">📞</span>
+            <dt className="w-6 shrink-0 text-center text-ink-400" aria-label="Téléphone">
+              <Icon icon={icons.phone} />
             </dt>
             <dd>
               <a href={toTelHref(business.phone)} className="font-medium text-brand-700 hover:underline">
@@ -72,8 +74,8 @@ export function ContactCard({ business, className }: ContactCardProps) {
 
         {business.email && (
           <div className="flex gap-3">
-            <dt className="w-6 shrink-0 text-center" aria-label="E-mail">
-              <span aria-hidden="true">✉️</span>
+            <dt className="w-6 shrink-0 text-center text-ink-400" aria-label="E-mail">
+              <Icon icon={icons.email} />
             </dt>
             <dd>
               <a
@@ -88,8 +90,8 @@ export function ContactCard({ business, className }: ContactCardProps) {
 
         {business.website && (
           <div className="flex gap-3">
-            <dt className="w-6 shrink-0 text-center" aria-label="Site web">
-              <span aria-hidden="true">🌐</span>
+            <dt className="w-6 shrink-0 text-center text-ink-400" aria-label="Site web">
+              <Icon icon={icons.website} />
             </dt>
             <dd>
               <a
@@ -108,7 +110,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
       <div className="mt-5 grid gap-2">
         {business.phone && (
           <Button href={toTelHref(business.phone)} fullWidth>
-            <span aria-hidden="true">📞</span> Appeler
+            <Icon icon={icons.phone} /> Appeler
           </Button>
         )}
         {business.website && (
@@ -119,7 +121,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
             target="_blank"
             rel="noopener noreferrer nofollow"
           >
-            <span aria-hidden="true">🌐</span> Visiter le site
+            <Icon icon={icons.website} /> Visiter le site
           </Button>
         )}
         {addressParts.length > 0 && (
@@ -130,7 +132,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
             target="_blank"
             rel="noopener noreferrer nofollow"
           >
-            <span aria-hidden="true">🧭</span> Itinéraire
+            <Icon icon={icons.directions} /> Itinéraire
           </Button>
         )}
       </div>
@@ -139,18 +141,23 @@ export function ContactCard({ business, className }: ContactCardProps) {
         <div className="mt-5 border-t border-ink-100 pt-4">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Réseaux sociaux</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
-            {socialEntries.map(([key, url]) => (
-              <li key={key}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="inline-flex rounded-lg bg-ink-100 px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-ink-200"
-                >
-                  {SOCIAL_LABELS[key] ?? key}
-                </a>
-              </li>
-            ))}
+            {socialEntries.map(([key, url]) => {
+              const network = SOCIAL_NETWORKS[key as keyof typeof SOCIAL_NETWORKS]
+              if (!network) return null
+
+              return (
+                <li key={key}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-ink-100 text-ink-700 hover:bg-ink-200"
+                  >
+                    <Icon icon={network.icon} label={network.label} />
+                  </a>
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}

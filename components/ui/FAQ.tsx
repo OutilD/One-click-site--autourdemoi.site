@@ -1,4 +1,6 @@
 import type { FaqItem } from '@/types'
+import { Icon } from './Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface FAQProps {
@@ -33,12 +35,10 @@ export function FAQ({ items, title = 'Questions fréquentes', defaultOpenFirst =
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink-900 [&::-webkit-details-marker]:hidden">
               {item.question}
-              <span
-                aria-hidden="true"
-                className="shrink-0 text-xl leading-none text-ink-400 transition-transform group-open:rotate-45"
-              >
-                +
-              </span>
+              <Icon
+                icon={icons.plus}
+                className="shrink-0 text-ink-400 transition-transform group-open:rotate-45"
+              />
             </summary>
             <p className="mt-3 text-sm leading-relaxed text-ink-600">{item.answer}</p>
           </details>

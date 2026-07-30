@@ -8,6 +8,8 @@ import { FAQ } from '@/components/ui/FAQ'
 import { SortSelect } from './SortSelect'
 import { BusinessGrid, type OpeningStatusMap } from './BusinessGrid'
 import type { Business, BreadcrumbItem, FaqItem, SelectOption } from '@/types'
+import { Icon } from '@/components/ui/Icon'
+import { categoryIcon } from '@/lib/icons'
 import { formatNumber, pluralize } from '@/utils/format'
 
 export interface LinkSection {
@@ -17,7 +19,7 @@ export interface LinkSection {
 
 interface DirectoryPageProps {
   breadcrumbItems: BreadcrumbItem[]
-  /** Pictogramme décoratif affiché à côté du titre. */
+  /** Clé d'icône affichée à côté du titre. */
   icon?: string
   heading: string
   lead: string
@@ -73,11 +75,7 @@ export function DirectoryPage({
 
       <header className="mt-6 max-w-3xl">
         <h1 className="flex items-start gap-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
-          {icon && (
-            <span aria-hidden="true" className="text-3xl">
-              {icon}
-            </span>
-          )}
+          {icon && <Icon icon={categoryIcon(icon)} className="mt-1 h-7 w-7 text-brand-600" />}
           {heading}
         </h1>
         <p className="mt-3 leading-relaxed text-ink-600">{lead}</p>

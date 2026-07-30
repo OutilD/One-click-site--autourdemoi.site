@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation'
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll'
 import { cn } from '@/utils/cn'
@@ -19,22 +21,23 @@ interface GalleryProps {
 /**
  * Galerie avec visionneuse plein écran.
  *
- * Composant client : gestion du clavier (Échap, flèches) et verrouillage du
- * défilement. Les images restent rendues dans le DOM initial, donc indexables.
+ * Gestion du clavier (Échap, flèches) et verrouillage du défilement délégués
+ * aux hooks dédiés.
  */
 export function Gallery({ images, className }: GalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const visible = images
 
   const close = useCallback(() => setActiveIndex(null), [])
 
   const move = useCallback(
     (delta: number) => {
       setActiveIndex((current) => {
-        if (current === null) return current
-        return (current + delta + images.length) % images.length
+        if (current === null || visible.length === 0) return current
+        return (current + delta + visible.length) % visible.length
       })
     },
-    [images.length],
+    [visible.length],
   )
 
   const previous = useCallback(() => move(-1), [move])
@@ -44,14 +47,14 @@ export function Gallery({ images, className }: GalleryProps) {
   useLockBodyScroll(isOpen)
   useKeyboardNavigation(isOpen, { onEscape: close, onPrevious: previous, onNext: next })
 
-  if (images.length === 0) return null
+  if (visible.length === 0) return null
 
-  const active = activeIndex === null ? null : images[activeIndex]
+  const active = activeIndex === null ? null : visible[activeIndex]
 
   return (
     <>
       <ul className={cn('grid grid-cols-2 gap-3 sm:grid-cols-3', className)}>
-        {images.map((image, index) => (
+        {visible.map((image, index) => (
           <li key={image.url} className="relative aspect-4/3 overflow-hidden rounded-xl bg-ink-100">
             <button
               type="button"
@@ -85,35 +88,32 @@ export function Gallery({ images, className }: GalleryProps) {
             </div>
 
             <p className="mt-3 text-center text-sm text-white/80">
-              {active.alt} — {(activeIndex ?? 0) + 1} / {images.length}
+              {active.alt} — {(activeIndex ?? 0) + 1} / {visible.length}
             </p>
 
             <button
               type="button"
               onClick={close}
-              className="absolute -top-2 right-0 flex h-10 w-10 -translate-y-full items-center justify-center rounded-full bg-white/10 text-xl text-white hover:bg-white/20"
+              className="absolute -top-2 right-0 flex h-10 w-10 -translate-y-full items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
             >
-              <span aria-hidden="true">✕</span>
-              <span className="sr-only">Fermer la visionneuse</span>
+              <Icon icon={icons.close} label="Fermer la visionneuse" />
             </button>
 
-            {images.length > 1 && (
+            {visible.length > 1 && (
               <>
                 <button
                   type="button"
                   onClick={previous}
-                  className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white hover:bg-white/20"
+                  className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
                 >
-                  <span aria-hidden="true">‹</span>
-                  <span className="sr-only">Photo précédente</span>
+                  <Icon icon={icons.chevronLeft} label="Photo précédente" />
                 </button>
                 <button
                   type="button"
                   onClick={next}
-                  className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white hover:bg-white/20"
+                  className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
                 >
-                  <span aria-hidden="true">›</span>
-                  <span className="sr-only">Photo suivante</span>
+                  <Icon icon={icons.chevronRight} label="Photo suivante" />
                 </button>
               </>
             )}

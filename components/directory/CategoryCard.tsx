@@ -1,9 +1,12 @@
 import Link from 'next/link'
+import { Icon } from '@/components/ui/Icon'
+import { categoryIcon } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { formatNumber, pluralize } from '@/utils/format'
 
 interface CategoryCardProps {
   name: string
+  /** Clé d'icône de catégorie — voir `categoryIcons`. */
   icon: string
   href: string
   businessCount: number
@@ -32,10 +35,10 @@ export function CategoryCard({
     >
       <span
         aria-hidden="true"
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl"
-        style={{ backgroundColor: accentColor ? `${accentColor}1a` : undefined }}
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+        style={{ backgroundColor: accentColor ? `${accentColor}1a` : undefined, color: accentColor }}
       >
-        {icon}
+        <Icon icon={categoryIcon(icon)} className="h-5 w-5" />
       </span>
       <span className="min-w-0">
         <span className="block font-semibold text-ink-900 group-hover:text-brand-700">{name}</span>

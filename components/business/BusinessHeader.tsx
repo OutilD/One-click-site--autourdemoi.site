@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { Rating } from '@/components/ui/Rating'
 import type { Business } from '@/types'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { formatPriceLevel } from '@/utils/format'
 
 interface BusinessHeaderProps {
@@ -75,7 +77,11 @@ export function BusinessHeader({
                 ) : (
                   <Badge tone="brand">{categoryLabel}</Badge>
                 ))}
-              {business.isVerified && <Badge tone="success">✓ Vérifié</Badge>}
+              {business.isVerified && (
+                <Badge tone="success">
+                  <Icon icon={icons.check} /> Vérifié
+                </Badge>
+              )}
               {openingLabel && <Badge tone={isOpen ? 'success' : 'neutral'}>{openingLabel}</Badge>}
             </div>
 

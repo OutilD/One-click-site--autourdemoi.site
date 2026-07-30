@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { Icon } from './Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface SectionHeadingProps {
@@ -33,7 +35,7 @@ export function SectionHeading({
           href={action.href}
           className="shrink-0 text-sm font-semibold text-brand-700 hover:text-brand-800 hover:underline"
         >
-          {action.label} <span aria-hidden="true">→</span>
+          {action.label} <Icon icon={icons.arrowRight} />
         </Link>
       )}
     </div>

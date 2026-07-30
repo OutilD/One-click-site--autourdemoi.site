@@ -1,3 +1,5 @@
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface BusinessMapProps {
@@ -74,9 +76,7 @@ export function BusinessMap({
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-200 px-4 py-3">
         <p className="text-sm text-ink-700">
-          <span aria-hidden="true" className="mr-1.5">
-            📍
-          </span>
+          <Icon icon={icons.address} className="mr-1.5 text-ink-400" />
           {address ?? label}
         </p>
 
@@ -87,7 +87,7 @@ export function BusinessMap({
             rel="noopener noreferrer nofollow"
             className="text-brand-700 hover:underline"
           >
-            Itinéraire <span aria-hidden="true">→</span>
+            Itinéraire <Icon icon={icons.arrowRight} className="ml-1" />
           </a>
           <a
             href={externalUrl}

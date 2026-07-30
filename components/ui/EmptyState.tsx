@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { Button } from './Button'
+import { Icon } from './Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface EmptyStateProps {
@@ -11,7 +13,7 @@ interface EmptyStateProps {
 }
 
 /** État vide : aucun résultat de recherche, aucune publication, etc. */
-export function EmptyState({ title, description, icon = '🔍', action, className }: EmptyStateProps) {
+export function EmptyState({ title, description, icon, action, className }: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -19,8 +21,8 @@ export function EmptyState({ title, description, icon = '🔍', action, classNam
         className,
       )}
     >
-      <div className="text-4xl" aria-hidden="true">
-        {icon}
+      <div className="text-ink-300" aria-hidden="true">
+        {icon ?? <Icon icon={icons.search} className="h-10 w-10" />}
       </div>
       <h3 className="mt-4 text-lg font-semibold text-ink-900">{title}</h3>
       <p className="mx-auto mt-2 max-w-md text-sm text-ink-600">{description}</p>

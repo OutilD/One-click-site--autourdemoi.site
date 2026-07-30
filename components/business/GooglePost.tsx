@@ -2,6 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import type { Post, PostType } from '@/types'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
 
@@ -63,13 +65,15 @@ export function GooglePost({ post, businessName, businessHref, className }: Goog
 
         {post.event && (
           <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
-            📅 Du {formatDate(post.event.startDate)} au {formatDate(post.event.endDate)}
+            <Icon icon={icons.calendar} className="mr-1.5" />
+            Du {formatDate(post.event.startDate)} au {formatDate(post.event.endDate)}
           </p>
         )}
 
         {post.offer && (
           <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
-            🎟️ Code <span className="font-mono font-bold">{post.offer.couponCode}</span> — valable jusqu’au{' '}
+            <Icon icon={icons.coupon} className="mr-1.5" />
+            Code <span className="font-mono font-bold">{post.offer.couponCode}</span> — valable jusqu’au{' '}
             {formatDate(post.offer.validUntil)}
           </p>
         )}
@@ -81,7 +85,7 @@ export function GooglePost({ post, businessName, businessHref, className }: Goog
             target="_blank"
             className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-brand-700 hover:underline"
           >
-            {post.ctaLabel} <span aria-hidden="true">→</span>
+            {post.ctaLabel} <Icon icon={icons.arrowRight} />
           </a>
         )}
       </div>

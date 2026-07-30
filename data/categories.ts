@@ -10,7 +10,7 @@ export const categories: Category[] = [
     slug: 'restaurants',
     name: 'Restaurant',
     pluralName: 'Restaurants',
-    icon: '🍽️',
+    icon: 'restaurant',
     tagline: 'Cuisine locale, bistrots et tables gastronomiques',
     description:
       'Des bistrots de quartier aux tables gastronomiques, découvrez les restaurants les mieux notés près de chez vous. Consultez les cartes, les horaires de service et les avis clients avant de réserver.',
@@ -39,7 +39,7 @@ export const categories: Category[] = [
     slug: 'plombiers',
     name: 'Plombier',
     pluralName: 'Plombiers',
-    icon: '🔧',
+    icon: 'plumber',
     tagline: 'Dépannage, sanitaire et chauffage',
     description:
       'Fuite d’eau, chauffe-eau en panne, installation sanitaire : trouvez un plombier disponible près de chez vous. Interventions d’urgence, devis gratuits et artisans notés par leurs clients.',
@@ -68,7 +68,7 @@ export const categories: Category[] = [
     slug: 'coiffeurs',
     name: 'Coiffeur',
     pluralName: 'Coiffeurs',
-    icon: '💇',
+    icon: 'hairdresser',
     tagline: 'Salons de coiffure femme, homme et enfant',
     description:
       'Coupe, couleur, balayage ou barbier : comparez les salons de coiffure de votre ville. Photos des réalisations, tarifs indicatifs, horaires et avis clients réunis sur une seule fiche.',
@@ -97,7 +97,7 @@ export const categories: Category[] = [
     slug: 'garages-automobiles',
     name: 'Garage automobile',
     pluralName: 'Garages automobiles',
-    icon: '🚗',
+    icon: 'garage',
     tagline: 'Entretien, réparation et contrôle technique',
     description:
       'Révision, embrayage, carrosserie ou pneumatiques : trouvez un garage automobile de confiance près de chez vous. Comparez les avis, les prestations et les horaires d’atelier.',
@@ -126,7 +126,7 @@ export const categories: Category[] = [
     slug: 'boulangeries',
     name: 'Boulangerie',
     pluralName: 'Boulangeries',
-    icon: '🥖',
+    icon: 'bakery',
     tagline: 'Pains au levain, viennoiseries et pâtisseries',
     description:
       'Baguette de tradition, pain au levain, viennoiseries pur beurre : découvrez les boulangeries artisanales les mieux notées de votre ville, avec leurs horaires et jours de fermeture.',
@@ -155,7 +155,7 @@ export const categories: Category[] = [
     slug: 'salles-de-sport',
     name: 'Salle de sport',
     pluralName: 'Salles de sport',
-    icon: '🏋️',
+    icon: 'gym',
     tagline: 'Musculation, cours collectifs et coaching',
     description:
       'Musculation, cross-training, cours collectifs ou coaching individuel : comparez les salles de sport de votre ville, leurs équipements, leurs horaires d’ouverture et les avis des adhérents.',
@@ -184,7 +184,7 @@ export const categories: Category[] = [
     slug: 'agences-immobilieres',
     name: 'Agence immobilière',
     pluralName: 'Agences immobilières',
-    icon: '🏠',
+    icon: 'realEstate',
     tagline: 'Achat, vente, location et gestion locative',
     description:
       'Vendre, acheter ou louer : trouvez une agence immobilière implantée dans votre quartier. Estimation gratuite, gestion locative et accompagnement, avec les avis des clients.',
@@ -213,7 +213,7 @@ export const categories: Category[] = [
     slug: 'electriciens',
     name: 'Électricien',
     pluralName: 'Électriciens',
-    icon: '💡',
+    icon: 'electrician',
     tagline: 'Mise aux normes, dépannage et domotique',
     description:
       'Tableau électrique, mise aux normes NF C 15-100, dépannage ou installation domotique : trouvez un électricien qualifié près de chez vous, avec devis gratuit et avis vérifiés.',

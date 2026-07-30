@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/Badge'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -160,9 +162,7 @@ export default async function BusinessPage({ params }: PageProps) {
                           key={service}
                           className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-ink-700 ring-1 ring-ink-200"
                         >
-                          <span aria-hidden="true" className="mt-0.5 text-brand-600">
-                            ●
-                          </span>
+                          <Icon icon={icons.check} className="mt-1 text-brand-600" />
                           {service}
                         </li>
                       ))}

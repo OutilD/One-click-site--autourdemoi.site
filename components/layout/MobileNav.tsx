@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import type { NavLink } from './Header'
 
 interface MobileNavProps {
@@ -28,9 +30,7 @@ export function MobileNav({ links }: MobileNavProps) {
         className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-ink-200 text-ink-700"
       >
         <span className="sr-only">{isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}</span>
-        <span aria-hidden="true" className="text-lg leading-none">
-          {isOpen ? '✕' : '☰'}
-        </span>
+        <Icon icon={isOpen ? icons.close : icons.menu} />
       </button>
 
       {isOpen && (

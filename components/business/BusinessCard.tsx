@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { Rating } from '@/components/ui/Rating'
 import type { Business } from '@/types'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { formatPriceLevel } from '@/utils/format'
 
@@ -58,14 +60,18 @@ export function BusinessCard({
         ) : (
           <div
             aria-hidden="true"
-            className="flex h-full w-full items-center justify-center bg-linear-to-br from-brand-50 to-ink-100 text-4xl"
+            className="flex h-full w-full items-center justify-center bg-linear-to-br from-brand-50 to-ink-100"
           >
-            🏢
+            <Icon icon={icons.photo} className="h-8 w-8 text-brand-300" />
           </div>
         )}
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {categoryLabel && <Badge tone="brand">{categoryLabel}</Badge>}
-          {business.isFeatured && <Badge tone="warning">★ À la une</Badge>}
+          {business.isFeatured && (
+            <Badge tone="warning">
+              <Icon icon={icons.featured} /> À la une
+            </Badge>
+          )}
         </div>
       </div>
 
@@ -78,10 +84,7 @@ export function BusinessCard({
             </Link>
           </h3>
           {business.isVerified && (
-            <span className="shrink-0 text-brand-600" title="Établissement vérifié">
-              <span aria-hidden="true">✓</span>
-              <span className="sr-only">Établissement vérifié</span>
-            </span>
+            <Icon icon={icons.check} label="Établissement vérifié" className="shrink-0 text-brand-600" />
           )}
         </div>
 

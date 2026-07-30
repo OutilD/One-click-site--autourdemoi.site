@@ -15,7 +15,7 @@ export interface Category {
   name: string
   /** Libellé au pluriel, utilisé dans les titres : « Plombiers ». */
   pluralName: string
-  /** Emoji utilisé comme pictogramme (aucune dépendance d'icônes externe). */
+  /** Clé d'icône Font Awesome — voir `categoryIcons` dans `lib/icons.ts`. */
   icon: string
   /** Résumé court affiché sur les cartes de catégorie. */
   tagline: string

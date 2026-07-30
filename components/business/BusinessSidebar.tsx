@@ -2,6 +2,8 @@ import type { Business, DayKey } from '@/types'
 import { ContactCard } from './ContactCard'
 import { OpeningHours } from './OpeningHours'
 import { Badge } from '@/components/ui/Badge'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { DAY_ORDER } from '@/utils/opening-hours'
 import { formatDate } from '@/utils/format'
@@ -70,9 +72,7 @@ export function BusinessSidebar({
           <ul className="mt-4 space-y-2 text-sm text-ink-700">
             {business.attributes.map((attribute) => (
               <li key={attribute} className="flex items-start gap-2">
-                <span aria-hidden="true" className="mt-0.5 text-emerald-600">
-                  ✓
-                </span>
+                <Icon icon={icons.check} className="mt-1 text-emerald-600" />
                 {attribute}
               </li>
             ))}

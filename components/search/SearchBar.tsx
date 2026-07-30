@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useId, useState, type FormEvent } from 'react'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface SearchBarProps {
@@ -12,7 +14,7 @@ interface SearchBarProps {
 }
 
 /**
- * Barre de recherche.
+ * Barre de recherche : terme libre + ville.
  *
  * Composant client (navigation programmatique), mais le formulaire reste
  * fonctionnel sans JavaScript grâce à `method="get"` sur `/entreprises`.
@@ -44,9 +46,7 @@ export function SearchBar({ defaultQuery = '', size = 'md', className }: SearchB
       )}
     >
       <div className="flex flex-1 items-center gap-2 px-3">
-        <span aria-hidden="true" className="text-ink-400">
-          🔎
-        </span>
+        <Icon icon={icons.search} className="text-ink-400" />
         <label htmlFor={queryId} className="sr-only">
           Que recherchez-vous ?
         </label>

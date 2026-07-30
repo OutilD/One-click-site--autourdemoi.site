@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { buildPageRange } from '@/utils/pagination'
+import { Icon } from './Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 
 interface PaginationProps {
@@ -28,13 +30,13 @@ export function Pagination({ currentPage, totalPages, buildHref, className }: Pa
               rel="prev"
               className={cn(ITEM, 'border border-ink-200 bg-white text-ink-700 hover:bg-ink-50')}
             >
-              <span aria-hidden="true">‹</span>
+              <Icon icon={icons.chevronLeft} />
               <span className="ml-1 hidden sm:inline">Précédent</span>
               <span className="sr-only">Page précédente</span>
             </Link>
           ) : (
             <span className={cn(ITEM, 'border border-ink-100 text-ink-300')} aria-disabled="true">
-              <span aria-hidden="true">‹</span>
+              <Icon icon={icons.chevronLeft} />
               <span className="ml-1 hidden sm:inline">Précédent</span>
             </span>
           )}
@@ -72,13 +74,13 @@ export function Pagination({ currentPage, totalPages, buildHref, className }: Pa
               className={cn(ITEM, 'border border-ink-200 bg-white text-ink-700 hover:bg-ink-50')}
             >
               <span className="mr-1 hidden sm:inline">Suivant</span>
-              <span aria-hidden="true">›</span>
+              <Icon icon={icons.chevronRight} />
               <span className="sr-only">Page suivante</span>
             </Link>
           ) : (
             <span className={cn(ITEM, 'border border-ink-100 text-ink-300')} aria-disabled="true">
               <span className="mr-1 hidden sm:inline">Suivant</span>
-              <span aria-hidden="true">›</span>
+              <Icon icon={icons.chevronRight} />
             </span>
           )}
         </li>

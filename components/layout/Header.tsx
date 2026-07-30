@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { MobileNav } from './MobileNav'
 
 export interface NavLink {
@@ -24,7 +26,7 @@ export function Header({ links, siteName }: HeaderProps) {
             aria-hidden="true"
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white"
           >
-            ◎
+            <Icon icon={icons.address} className="h-4 w-4" />
           </span>
           <span className="text-lg tracking-tight">{siteName}</span>
         </Link>
@@ -46,7 +48,7 @@ export function Header({ links, siteName }: HeaderProps) {
 
         <div className="flex items-center gap-2">
           <Button href="/entreprises" size="sm" variant="outline" className="hidden sm:inline-flex">
-            <span aria-hidden="true">🔎</span> Rechercher
+            <Icon icon={icons.search} /> Rechercher
           </Button>
           <MobileNav links={links} />
         </div>

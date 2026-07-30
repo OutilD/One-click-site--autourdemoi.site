@@ -1,5 +1,7 @@
 import { Rating } from '@/components/ui/Rating'
 import type { RatingBreakdown } from '@/types'
+import { Icon } from '@/components/ui/Icon'
+import { icons } from '@/lib/icons'
 import { cn } from '@/utils/cn'
 import { formatNumber, formatRating, pluralize } from '@/utils/format'
 
@@ -37,7 +39,9 @@ export function ReviewSummary({ breakdown, isEstimated = false, className }: Rev
 
           return (
             <li key={star} className="flex items-center gap-3 text-sm">
-              <span className="w-12 shrink-0 tabular-nums text-ink-600">{star} ★</span>
+              <span className="flex w-12 shrink-0 items-center gap-1 tabular-nums text-ink-600">
+                {star} <Icon icon={icons.star} className="text-star" />
+              </span>
               <span
                 className="h-2 flex-1 overflow-hidden rounded-full bg-ink-100"
                 role="img"
