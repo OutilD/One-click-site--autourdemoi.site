@@ -251,7 +251,7 @@ export function toBusiness(dto: LsBusiness, options: MapperOptions = {}): Busine
     ...(dto.shortDescription ? { shortDescription: dto.shortDescription } : {}),
 
     categorySlug: dto.category?.slug ?? null,
-    secondaryCategorySlugs: [],
+    secondaryCategories: [],
 
     ...(location.address ? { address: location.address } : {}),
     ...(location.postalCode ? { postalCode: location.postalCode } : {}),
@@ -302,7 +302,10 @@ export function toBusinessDetail(dto: LsBusinessDetail, options: MapperOptions =
   return {
     ...base,
     ...(dto.description ? { description: dto.description } : {}),
-    secondaryCategorySlugs: dto.additionalCategories.map((category) => category.slug),
+    secondaryCategories: dto.additionalCategories.map((category) => ({
+      slug: category.slug,
+      name: category.displayName,
+    })),
     additionalPhones: dto.additionalPhones,
     ...(dto.email ? { email: dto.email } : {}),
     social: cleanSocial(dto.socialProfiles),

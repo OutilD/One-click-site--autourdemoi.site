@@ -60,7 +60,14 @@ export interface Business {
 
   /** `null` si la fiche n'a pas de catégorie : elle reste listée mais hors page catégorie. */
   categorySlug: Slug | null
-  secondaryCategorySlugs: Slug[]
+  /**
+   * Catégories secondaires, libellé compris.
+   *
+   * Le libellé est conservé car ces catégories n'apparaissent pas forcément
+   * dans le référentiel global : l'API ne liste dans `categories[]` que les
+   * catégories **principales**. Sans lui, on ne pourrait pas les afficher.
+   */
+  secondaryCategories: { slug: Slug; name: string }[]
 
   address?: string
   postalCode?: string
