@@ -49,12 +49,9 @@ export function Footer({ columns, siteName, tagline, year }: FooterProps) {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-ink-200 pt-6 text-sm text-ink-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 border-t border-ink-200 pt-6 text-sm text-ink-500">
           <p>
             © {year} {siteName}. Tous droits réservés.
-          </p>
-          <p className="text-xs">
-            Données de démonstration — les informations affichées ne correspondent pas à des établissements réels.
           </p>
         </div>
       </Container>
