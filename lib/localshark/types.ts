@@ -42,6 +42,18 @@ export interface LsLocation {
   longitude: number | null
   /** Zones desservies — seul rattachement ville d'un artisan mobile. */
   servedCities: LsServedCity[]
+  /**
+   * Carte Google prête à embarquer, pointant sur le `place_id` exact de la
+   * fiche. Champ absent du contrat initial, apparu côté API.
+   *
+   * ⚠️ L'URL contient une clé Google Maps en clair. C'est le fonctionnement
+   * normal de l'Embed API (la clé est publique), mais elle **doit** être
+   * restreinte par référent HTTP côté console Google, sans quoi n'importe qui
+   * peut consommer le quota.
+   */
+  mapEmbedUrl?: string | null
+  /** Lien Google Maps vers la fiche, avec `place_id`. */
+  mapLinkUrl?: string | null
 }
 
 /** Deux entrées pour un même `day` = coupure méridienne. Jour absent = fermé. */

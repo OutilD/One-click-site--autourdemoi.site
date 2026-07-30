@@ -280,6 +280,8 @@ export function toBusiness(dto: LsBusiness, options: MapperOptions = {}): Busine
 
     ...(location.latitude !== null ? { latitude: location.latitude } : {}),
     ...(location.longitude !== null ? { longitude: location.longitude } : {}),
+    ...(location.mapEmbedUrl ? { mapEmbedUrl: location.mapEmbedUrl } : {}),
+    ...(location.mapLinkUrl ? { mapLinkUrl: location.mapLinkUrl } : {}),
 
     ...(dto.logoUrl ? { logo: sizeGooglePhoto(dto.logoUrl, PHOTO_SIZES.logo) } : {}),
     ...(dto.coverUrl ? { coverImage: sizeGooglePhoto(dto.coverUrl, PHOTO_SIZES.cover) } : {}),

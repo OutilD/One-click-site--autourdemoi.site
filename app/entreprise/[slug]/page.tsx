@@ -7,7 +7,7 @@ import { FAQ } from '@/components/ui/FAQ'
 import { BusinessHeader } from '@/components/business/BusinessHeader'
 import { BusinessSidebar } from '@/components/business/BusinessSidebar'
 import { Gallery } from '@/components/business/Gallery'
-import { MapPlaceholder } from '@/components/business/MapPlaceholder'
+import { BusinessMap } from '@/components/business/BusinessMap'
 import { ReviewCard } from '@/components/business/ReviewCard'
 import { ReviewSummary } from '@/components/business/ReviewSummary'
 import { ReviewsWidget } from '@/components/business/ReviewsWidget'
@@ -167,14 +167,16 @@ export default async function BusinessPage({ params }: PageProps) {
                 <h2 id="map-heading" className="text-2xl font-bold tracking-tight text-ink-900">
                   Localisation
                 </h2>
-                <MapPlaceholder
+                <BusinessMap
                   latitude={business.latitude}
                   longitude={business.longitude}
                   label={business.name}
                   address={
                     [business.address, business.postalCode, business.cityName].filter(Boolean).join(', ') ||
-                    (areaName ? `Intervient à ${areaName}` : '')
+                    (areaName ? `Intervient à ${areaName}` : undefined)
                   }
+                  embedUrl={business.mapEmbedUrl}
+                  linkUrl={business.mapLinkUrl}
                   className="mt-6"
                 />
               </section>
