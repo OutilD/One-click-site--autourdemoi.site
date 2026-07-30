@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+/* ───────────────────────────── Design tokens ───────────────────────────── */
+@theme {
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dbe6fe;
+  --color-brand-200: #bfd3fe;
+  --color-brand-300: #93b4fd;
+  --color-brand-400: #608cfa;
+  --color-brand-500: #3b66f6;
+  --color-brand-600: #2547eb;
+  --color-brand-700: #1d35d8;
+  --color-brand-800: #1e2eaf;
+  --color-brand-900: #1e2d8a;
+  --color-brand-950: #171e54;
+
+  --color-ink-50: #f8fafc;
+  --color-ink-100: #f1f5f9;
+  --color-ink-200: #e2e8f0;
+  --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #475569;
+  --color-ink-700: #334155;
+  --color-ink-800: #1e293b;
+  --color-ink-900: #0f172a;
+
+  --color-star: #f59e0b;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --radius-card: 0.875rem;
+}
+
+/* ─────────────────────────────── Base layer ────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink-50);
+    color: var(--color-ink-800);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Anneau de focus homogène et toujours visible au clavier. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  /* Respecte la préférence système de réduction d'animation. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Lien d'évitement, révélé uniquement au focus clavier. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    z-index: 100;
+  }
+
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-brand-700);
+    color: white;
+    border-radius: 0.5rem;
+  }
+}
+
+@utility line-clamp-2-safe {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
