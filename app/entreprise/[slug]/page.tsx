@@ -21,9 +21,10 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbJsonLd, faqJsonLd, localBusinessJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
 import { buildMetadata, businessDescription, businessTitle } from '@/lib/seo'
+import { siteConfig } from '@/lib/site'
 import { buildCategoryLabels, buildOpeningStatuses, currentDayKey, hasOpeningHours } from '@/lib/view-helpers'
 import { BusinessRepository, CategoryRepository, ReviewRepository } from '@/repositories'
-import { formatRating, formatRelativeDate } from '@/utils/format'
+import { formatRating, formatRelativeDate, pluralize } from '@/utils/format'
 import { getOpeningStatus } from '@/utils/opening-hours'
 
 interface PageProps {
@@ -66,7 +67,11 @@ export default async function BusinessPage({ params }: PageProps) {
 
   if (!detail) notFound()
 
-  const { business, posts, photos, reviews } = detail
+  const { business, reviews } = detail
+
+  // Les plus récents d'abord : les sources les trient déjà par date.
+  const photos = detail.photos.slice(0, siteConfig.businessPage.maxPhotos)
+  const posts = detail.posts.slice(0, siteConfig.businessPage.maxPosts)
   const now = new Date()
 
   const [category, similar, categories, breakdown] = await Promise.all([
@@ -176,7 +181,11 @@ export default async function BusinessPage({ params }: PageProps) {
               <section aria-labelledby="gallery-heading">
                 <SectionHeading
                   title="Photos"
-                  description={`${photos.length} photos publiées par l’établissement.`}
+                  description={
+                    detail.photos.length > photos.length
+                      ? `Les ${photos.length} photos les plus récentes, sur ${detail.photos.length} publiées.`
+                      : `${photos.length} ${pluralize(photos.length, 'photo')} ${pluralize(photos.length, 'publiée', 'publiées')} par l’établissement.`
+                  }
                 />
                 <Gallery
                   images={photos.map((photo) => ({ url: photo.url, alt: photo.alt }))}
@@ -242,7 +251,11 @@ export default async function BusinessPage({ params }: PageProps) {
               <section aria-labelledby="posts-heading">
                 <SectionHeading
                   title="Publications"
-                  description="Actualités, offres et événements de l’établissement."
+                  description={
+                    detail.posts.length > posts.length
+                      ? `Les ${posts.length} publications les plus récentes, sur ${detail.posts.length}.`
+                      : 'Actualités, offres et événements de l’établissement.'
+                  }
                 />
                 <ul className="mt-6 grid gap-5 sm:grid-cols-2">
                   {posts.map((post) => (

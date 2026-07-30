@@ -26,6 +26,17 @@ export const siteConfig = {
   },
   /** Nombre d'éléments par page sur les listings. */
   defaultPerPage: 12,
+  /**
+   * Limites d'affichage sur une fiche établissement.
+   *
+   * Certaines fiches cumulent des dizaines de photos et de publications :
+   * tout afficher alourdit la page sans rien apporter. On garde les plus
+   * récentes, et le total reste annoncé.
+   */
+  businessPage: {
+    maxPhotos: 10,
+    maxPosts: 10,
+  },
   /** Priorité et fréquence par défaut du sitemap. */
   sitemap: {
     homePriority: 1,
