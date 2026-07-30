@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Badge } from '@/components/ui/Badge'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -85,6 +87,17 @@ export default async function BusinessPage({ params }: PageProps) {
   const categoryLabels = buildCategoryLabels(categories)
   const similarStatuses = buildOpeningStatuses(similar, now)
 
+  // Toutes les catégories secondaires sont affichées, mais seules celles qui
+  // existent dans le référentiel sont cliquables : l'API ne liste dans
+  // `categories[]` que les catégories principales, un lien vers les autres
+  // mènerait à une 404.
+  const secondaryCategories = business.secondaryCategories.map((item) => ({
+    ...item,
+    href: categories.some((category) => category.slug === item.slug)
+      ? routes.category(item.slug)
+      : null,
+  }))
+
   const faqItems = [...business.faq, ...(category?.faq ?? [])]
 
   const breadcrumbItems = [
@@ -126,6 +139,25 @@ export default async function BusinessPage({ params }: PageProps) {
                       <p key={index}>{paragraph}</p>
                     ))}
                   </div>
+                )}
+
+                {secondaryCategories.length > 0 && (
+                  <>
+                    <h3 className="mt-8 text-lg font-semibold text-ink-900">Également référencé en</h3>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {secondaryCategories.map((item) => (
+                        <li key={item.slug}>
+                          {item.href ? (
+                            <Link href={item.href}>
+                              <Badge tone="brand">{item.name}</Badge>
+                            </Link>
+                          ) : (
+                            <Badge>{item.name}</Badge>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
 
                 {business.services.length > 0 && (

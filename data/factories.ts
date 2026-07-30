@@ -282,7 +282,7 @@ export function buildBusiness(seed: BusinessSeed, index: number): Business {
     description: seed.description,
 
     categorySlug: seed.categorySlug,
-    secondaryCategorySlugs: [],
+    secondaryCategories: [],
 
     address: seed.street,
     postalCode: city.postalCode,
