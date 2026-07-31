@@ -118,6 +118,36 @@ export function sizeGooglePhoto(url: string, size: number): string {
 const PHOTO_SIZES = { logo: 400, cover: 1600, gallery: 1600, post: 800 } as const
 
 /**
+ * Dédoublonne les prestations d'une fiche.
+ *
+ * Les fiches Google en comportent : la même prestation y est parfois saisie
+ * deux fois, à l'identique (« Taxi Souillac ») ou à la casse près
+ * (« brive airport taxi » et « Brive Airport taxi »). Affichées telles quelles,
+ * elles se répètent à l'écran et gonflent inutilement l'index de recherche.
+ *
+ * La comparaison porte sur une forme normalisée ; c'est la première graphie
+ * rencontrée qui est conservée, pour ne pas réécrire ce que le professionnel
+ * a saisi.
+ */
+function dedupeServices(names: (string | null | undefined)[]): string[] {
+  const seen = new Set<string>()
+  const unique: string[] = []
+
+  for (const name of names) {
+    const trimmed = name?.trim()
+    if (!trimmed) continue
+
+    const key = trimmed.toLocaleLowerCase('fr')
+    if (seen.has(key)) continue
+
+    seen.add(key)
+    unique.push(trimmed)
+  }
+
+  return unique
+}
+
+/**
  * Construit l'URL du widget d'avis : origine maîtrisée et paramètres imposés.
  *
  * L'API renvoie une URL absolue liée à son propre environnement
@@ -253,7 +283,7 @@ export function toBusinessDetail(dto: LsBusinessDetail, options: MapperOptions =
     social: cleanSocial(dto.socialProfiles),
     gallery: dto.photos.map((photo) => sizeGooglePhoto(photo.imageUrl, PHOTO_SIZES.gallery)),
     specialHours: toSpecialHours(dto.specialHours),
-    services: dto.services.map((service) => service.name).filter(Boolean),
+    services: dedupeServices(dto.services.map((service) => service.name)),
     attributes: [],
     faq: dto.faq,
     ...(toFoundedYear(dto.openingDate) ? { foundedYear: toFoundedYear(dto.openingDate) } : {}),
