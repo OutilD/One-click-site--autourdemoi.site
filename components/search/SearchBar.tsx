@@ -41,12 +41,15 @@ export function SearchBar({ defaultQuery = '', size = 'md', className }: SearchB
       onSubmit={handleSubmit}
       role="search"
       className={cn(
-        'flex w-full flex-col gap-2 rounded-2xl bg-white p-2 shadow-lg shadow-ink-900/5 ring-1 ring-ink-200 sm:flex-row',
+        // Cadre noir plein plutôt qu'un anneau : la barre est posée sur l'aplat
+        // jaune du héros, où un filet gris clair disparaîtrait. `focus-within`
+        // porte l'état actif sur tout le bloc, pas sur le seul champ interne.
+        'flex w-full flex-col gap-2 rounded-lg border-2 border-ink-900 bg-ink-50 p-1.5 transition-shadow duration-150 focus-within:shadow-[0_0_0_3px_var(--color-ink-900)] sm:flex-row',
         className,
       )}
     >
-      <div className="flex flex-1 items-center gap-2 px-3">
-        <Icon icon={icons.search} className="text-ink-400" />
+      <div className="flex flex-1 items-center gap-3 px-3">
+        <Icon icon={icons.search} className="text-ink-500" />
         <label htmlFor={queryId} className="sr-only">
           Que recherchez-vous ?
         </label>
@@ -58,15 +61,23 @@ export function SearchBar({ defaultQuery = '', size = 'md', className }: SearchB
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Restaurant, plombier, coiffeur…"
           autoComplete="off"
-          className={cn('w-full bg-transparent text-ink-900 outline-none placeholder:text-ink-400', fieldHeight)}
+          className={cn(
+            // L'état de focus est porté par le cadre : celui du champ ferait doublon.
+            'w-full bg-transparent text-ink-900 outline-none placeholder:text-ink-400 focus-visible:outline-none',
+            fieldHeight,
+          )}
         />
       </div>
 
-
+      {/*
+        Bouton noir, et non jaune : dans le héros, la barre repose sur un aplat
+        jaune — un bouton jaune s'y fondrait. Le noir tranche sur les deux fonds
+        où la barre apparaît, l'aplat du héros comme le blanc des listings.
+      */}
       <button
         type="submit"
         className={cn(
-          'shrink-0 rounded-xl bg-brand-600 px-6 font-semibold text-white transition-colors hover:bg-brand-700',
+          'shrink-0 cursor-pointer rounded-md bg-ink-900 px-7 font-semibold text-ink-50 transition-colors duration-150 hover:bg-ink-700',
           fieldHeight,
         )}
       >

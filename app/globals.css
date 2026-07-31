@@ -1,60 +1,126 @@
 @import 'tailwindcss';
 
-/* ───────────────────────────── Design tokens ───────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Système de design — annuaire clair, jaune et noir
+
+   Registre : l'annuaire imprimé grand public. Fond ivoire, texte noir, jaune
+   en aplat sur les points d'action. Dense et utilitaire plutôt qu'aéré :
+   sur un annuaire, la valeur est dans la quantité d'information lisible d'un
+   coup d'œil, pas dans le blanc tournant.
+
+   RÈGLE STRUCTURANTE — le jaune ne porte jamais de texte.
+   #ffd400 sur blanc plafonne à 1.4:1. Il ne peut donc être qu'un FOND
+   (avec du noir dessus, 13.3:1), un filet, ou une pastille. Partout où il
+   faut un accent *coloré et lisible* — liens, libellés — on utilise l'ambre
+   profond `brand-700` (5.9:1 sur blanc), qui reste de la même famille.
+   ═════════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  --color-brand-50: #eef4ff;
-  --color-brand-100: #dbe6fe;
-  --color-brand-200: #bfd3fe;
-  --color-brand-300: #93b4fd;
-  --color-brand-400: #608cfa;
-  --color-brand-500: #3b66f6;
-  --color-brand-600: #2547eb;
-  --color-brand-700: #1d35d8;
-  --color-brand-800: #1e2eaf;
-  --color-brand-900: #1e2d8a;
-  --color-brand-950: #171e54;
+  /* ── Neutres ──────────────────────────────────────────────────────────────
+     Échelle classique : l'indice suit l'obscurité. 50 = surface haute
+     (cartes), 900 = titres. Les gris sont tirés vers le brun (~40°) pour
+     s'accorder au jaune ; un gris neutre pur virerait au bleu à côté.
 
-  --color-ink-50: #f8fafc;
-  --color-ink-100: #f1f5f9;
-  --color-ink-200: #e2e8f0;
-  --color-ink-300: #cbd5e1;
-  --color-ink-400: #94a3b8;
-  --color-ink-500: #64748b;
-  --color-ink-600: #475569;
-  --color-ink-700: #334155;
-  --color-ink-800: #1e293b;
-  --color-ink-900: #0f172a;
+     Contrastes (blanc / fond de page #faf9f7 / bande #f4f3f0) :
+       ink-400 → 5.3 / 5.0 / 4.8  · texte tertiaire, plancher lisible
+       ink-500 → 7.1 / 6.7 / 6.4  · texte secondaire
+       ink-600 → 10.0 / 9.5 / 9.0 · texte courant
+       ink-900 → 19.0 / 18.1 / 17.1 · titres                                */
+  --color-ink-50: #ffffff;
+  --color-ink-75: #faf9f7;
+  --color-ink-100: #f4f3f0;
+  --color-ink-150: #edebe6;
+  --color-ink-200: #e4e2dc;
+  --color-ink-300: #cdcac2;
+  --color-ink-400: #6f6b63;
+  --color-ink-500: #5c584f;
+  --color-ink-600: #46423a;
+  --color-ink-700: #332f28;
+  --color-ink-800: #211e19;
+  --color-ink-900: #12100d;
 
-  --color-star: #f59e0b;
+  /* ── Marque : jaune annuaire ──────────────────────────────────────────────
+     300–500 sont des APLATS (fond jaune, texte `ink-900` dessus).
+     600–800 sont des couleurs de TEXTE (ambre profond, lisibles sur clair).
+     Ne jamais intervertir les deux moitiés de l'échelle.                    */
+  --color-brand-50: #fffbeb;
+  --color-brand-100: #fff3c4;
+  --color-brand-200: #ffe985;
+  --color-brand-300: #ffe040;
+  --color-brand-400: #ffd400;
+  --color-brand-500: #f5c400;
+  --color-brand-600: #b58200;
+  --color-brand-700: #8a5a00;
+  --color-brand-800: #6b4700;
+  --color-brand-900: #4a3100;
 
+  /* ── Sémantiques ────────────────────────────────────────────────────────
+     Fonds très pâles + textes profonds, appairés pour tenir 4.5:1.        */
+  --color-star: #f5b301;
+
+  --color-positive: #146c43;
+  --color-positive-bg: #e8f5ee;
+  --color-caution: #8a5a00;
+  --color-caution-bg: #fff4d6;
+  --color-critical: #a4243b;
+  --color-critical-bg: #fdeaed;
+
+  /* ── Typographie ────────────────────────────────────────────────────────
+     IBM Plex Sans porte titres et interface. Une seule famille : sur un
+     annuaire, la hiérarchie se fait à la graisse et à la casse, pas au
+     changement de police. Injectée par `next/font` dans le layout.        */
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    var(--font-plex), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --radius-card: 0.875rem;
+  --radius-card: 0.75rem;
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* ─────────────────────────────── Base layer ────────────────────────────── */
+/* ─────────────────────────────── Base layer ──────────────────────────────── */
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
   }
 
   body {
-    background-color: var(--color-ink-50);
-    color: var(--color-ink-800);
+    background-color: var(--color-ink-75);
+    color: var(--color-ink-600);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Anneau de focus homogène et toujours visible au clavier. */
+  /* Plex est un grotesque à chasse plutôt large : aux grandes tailles,
+     l'interlettrage par défaut sonne mou. On le resserre sur le titrage. */
+  h1,
+  h2,
+  h3 {
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+  }
+
+  /* Anneau de focus homogène et toujours visible au clavier. Noir plutôt que
+     jaune : sur fond clair, un anneau jaune serait invisible. */
   :focus-visible {
-    outline: 2px solid var(--color-brand-600);
+    outline: 2px solid var(--color-ink-900);
     outline-offset: 2px;
     border-radius: 0.25rem;
   }
 
-  /* Respecte la préférence système de réduction d'animation. */
+  ::selection {
+    background: var(--color-brand-400);
+    color: var(--color-ink-900);
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -82,10 +148,42 @@
     left: 1rem;
     top: 1rem;
     padding: 0.75rem 1rem;
-    background: var(--color-brand-700);
-    color: white;
+    background: var(--color-brand-400);
+    color: var(--color-ink-900);
+    font-weight: 600;
     border-radius: 0.5rem;
   }
+}
+
+/* ──────────────────────────────── Utilitaires ────────────────────────────── */
+
+/** Sur-titre de section : petites capitales espacées. */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+}
+
+/**
+ * Filet de section, épais et noir.
+ *
+ * Deux traits d'épaisseur inégale, à la manière d'un filet de titre de presse.
+ * C'est ce qui structure la page à la place des dégradés.
+ */
+@utility rule-heavy {
+  height: 3px;
+  border: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--color-ink-900) 0,
+    var(--color-ink-900) 2px,
+    transparent 2px
+  );
 }
 
 @utility line-clamp-2-safe {
@@ -93,4 +191,20 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/** Apparition du contenu de héros, décalée par `animation-delay` en ligne. */
+@utility rise {
+  animation: rise 0.6s var(--ease-out-soft) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

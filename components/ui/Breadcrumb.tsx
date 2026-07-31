@@ -21,7 +21,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
           return (
             <li key={`${item.label}-${index}`} className="flex items-center gap-2">
               {index > 0 && (
-                <span aria-hidden="true" className="text-ink-300">
+                <span aria-hidden="true" className="text-ink-400">
                   /
                 </span>
               )}
@@ -30,7 +30,10 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                   {item.label}
                 </Link>
               ) : (
-                <span className={cn(isLast && 'font-medium text-ink-700')} aria-current={isLast ? 'page' : undefined}>
+                <span
+                  className={cn(isLast && 'font-medium text-ink-700')}
+                  aria-current={isLast ? 'page' : undefined}
+                >
                   {item.label}
                 </span>
               )}

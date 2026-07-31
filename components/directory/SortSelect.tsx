@@ -37,7 +37,7 @@ export function SortSelect({ action, value, options, hiddenFields, className }: 
         name="tri"
         defaultValue={value}
         onChange={() => formRef.current?.requestSubmit()}
-        className="h-10 rounded-lg border border-ink-300 bg-white px-3 text-sm font-medium text-ink-800"
+        className="h-10 rounded-lg border border-ink-300 bg-ink-150 px-3 text-sm font-medium text-ink-800"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

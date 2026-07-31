@@ -56,7 +56,9 @@ export function ReviewsWidget({ src, title = 'Avis Google', className }: Reviews
       title={title}
       loading="lazy"
       style={{ height }}
-      className={cn('w-full rounded-card border-0 bg-white', className)}
+      // Le widget se rend en thème clair, comme la page : il s'y fond sans
+      // traitement particulier. Un simple filet le délimite.
+      className={cn('w-full rounded-card border border-ink-200 bg-ink-50', className)}
     />
   )
 }

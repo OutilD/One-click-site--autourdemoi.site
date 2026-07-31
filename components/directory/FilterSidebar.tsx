@@ -51,7 +51,7 @@ export function FilterSidebar({
       ref={formRef}
       action={action}
       method="get"
-      className={cn('rounded-card border border-ink-200 bg-white p-5', className)}
+      className={cn('rounded-card border border-ink-200 bg-ink-50 p-5', className)}
       aria-label="Filtrer les résultats"
     >
       {/* Conserve la recherche et le tri courants lors d'un changement de filtre. */}
@@ -59,7 +59,7 @@ export function FilterSidebar({
       <input type="hidden" name="tri" value={values.tri} />
 
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-ink-900">Filtres</h2>
+        <h2 className="text-xl font-medium text-ink-900">Filtres</h2>
         {hasActiveFilter && (
           <Link href={resetHref} className="text-sm font-medium text-brand-700 hover:underline">
             Réinitialiser
@@ -91,10 +91,16 @@ export function FilterSidebar({
         </div>
       </fieldset>
 
-      <fieldset className="mt-6 border-t border-ink-100 pt-5">
+      <fieldset className="mt-6 border-t border-ink-200 pt-5">
         <legend className="text-sm font-semibold text-ink-900">Note minimale</legend>
         <div className="mt-2 space-y-1">
-          <FilterRadio name="note" value="" label="Toutes les notes" checked={values.note === ''} onChange={autoSubmit} />
+          <FilterRadio
+            name="note"
+            value=""
+            label="Toutes les notes"
+            checked={values.note === ''}
+            onChange={autoSubmit}
+          />
           {ratingOptions.map((option) => (
             <FilterRadio
               key={option.value}
@@ -111,7 +117,7 @@ export function FilterSidebar({
       {/* Repli sans JavaScript : le bouton reste utilisable au clavier. */}
       <button
         type="submit"
-        className="mt-6 h-11 w-full rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white hover:bg-brand-700"
+        className="mt-6 h-11 w-full rounded-lg bg-brand-400 px-4 text-sm font-semibold text-ink-900 hover:bg-brand-300"
       >
         Appliquer les filtres
       </button>
@@ -130,17 +136,19 @@ interface FilterRadioProps {
 
 function FilterRadio({ name, value, label, count, checked, onChange }: FilterRadioProps) {
   return (
-    <label className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-ink-50">
+    <label className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-ink-150">
       <input
         type="radio"
         name={name}
         value={value}
         defaultChecked={checked}
         onChange={onChange}
-        className="h-4 w-4 accent-[var(--color-brand-600)]"
+        className="h-4 w-4 accent-[var(--color-brand-500)]"
       />
       <span className="flex-1 text-ink-700">{label}</span>
-      {count !== undefined && <span className="text-xs tabular-nums text-ink-400">{formatNumber(count)}</span>}
+      {count !== undefined && (
+        <span className="text-xs tabular-nums text-ink-400">{formatNumber(count)}</span>
+      )}
     </label>
   )
 }

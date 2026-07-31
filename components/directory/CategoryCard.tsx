@@ -15,37 +15,39 @@ interface CategoryCardProps {
   className?: string
 }
 
-/** Vignette de catégorie — accueil et page « Toutes les catégories ». */
-export function CategoryCard({
-  name,
-  icon,
-  href,
-  businessCount,
-  tagline,
-  accentColor,
-  className,
-}: CategoryCardProps) {
+/**
+ * Vignette de catégorie — accueil et page « Toutes les catégories ».
+ *
+ * `accentColor` est volontairement ignoré. Les couleurs portées par les
+ * données ont été choisies pour un fond clair : posées sur du fusain, les
+ * vingt-trois teintes vives de la grille virent au nuancier et cassent la
+ * ligne laiton du site. La différenciation passe par l'icône, pas par la
+ * couleur — la prop reste dans la signature pour ne pas casser les appelants.
+ */
+export function CategoryCard({ name, icon, href, businessCount, tagline, className }: CategoryCardProps) {
   return (
     <Link
       href={href}
       className={cn(
-        'group flex items-center gap-4 rounded-card border border-ink-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md',
+        'group relative flex cursor-pointer items-center gap-4 overflow-hidden rounded-card border border-ink-200 bg-ink-50 p-5 transition-colors duration-200 hover:border-ink-900 hover:bg-ink-150',
         className,
       )}
     >
+      {/* Pastille jaune pleine à icône noire : c'est le repère de métier. Un
+          fond pâle à icône ambrée s'effaçait dans la grille. */}
       <span
         aria-hidden="true"
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-        style={{ backgroundColor: accentColor ? `${accentColor}1a` : undefined, color: accentColor }}
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded bg-brand-400 text-ink-900"
       >
-        <Icon icon={categoryIcon(icon)} className="h-5 w-5" />
+        <Icon icon={categoryIcon(icon)} className="h-4.5 w-4.5" />
       </span>
-      <span className="min-w-0">
-        <span className="block font-semibold text-ink-900 group-hover:text-brand-700">{name}</span>
-        <span className="block text-sm text-ink-500">
+
+      <span className="min-w-0 flex-1">
+        <span className="block font-semibold text-ink-900">{name}</span>
+        <span className="mt-0.5 block text-sm tabular-nums text-ink-500">
           {formatNumber(businessCount)} {pluralize(businessCount, 'établissement')}
         </span>
-        {tagline && <span className="mt-0.5 block truncate text-xs text-ink-400">{tagline}</span>}
+        {tagline && <span className="mt-1 block truncate text-xs text-ink-400">{tagline}</span>}
       </span>
     </Link>
   )

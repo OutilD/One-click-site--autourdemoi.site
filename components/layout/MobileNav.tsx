@@ -27,7 +27,7 @@ export function MobileNav({ links }: MobileNavProps) {
         onClick={() => setIsOpen((open) => !open)}
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-ink-200 text-ink-700"
+        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-ink-300 text-ink-700 transition-colors duration-200 hover:border-ink-900 hover:text-brand-700"
       >
         <span className="sr-only">{isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}</span>
         <Icon icon={isOpen ? icons.close : icons.menu} />
@@ -36,14 +36,14 @@ export function MobileNav({ links }: MobileNavProps) {
       {isOpen && (
         <div
           id="mobile-menu"
-          className="absolute inset-x-0 top-full z-40 border-b border-ink-200 bg-white shadow-lg"
+          className="absolute inset-x-0 top-full z-40 border-b border-ink-200 bg-ink-100/95 backdrop-blur-xl"
         >
-          <ul className="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+          <ul className="mx-auto max-w-7xl divide-y divide-ink-200 px-4 py-2 sm:px-6">
             {links.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block rounded-lg px-3 py-3 font-medium text-ink-700 hover:bg-ink-50"
+                  className="block px-1 py-3.5 font-medium text-ink-700 transition-colors duration-200 hover:text-brand-700"
                 >
                   {link.label}
                 </Link>

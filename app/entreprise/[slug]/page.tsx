@@ -57,7 +57,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: businessDescription(business, category?.name, business.cityName),
     path: routes.business(business.slug),
     ...(business.coverImage ? { image: business.coverImage } : {}),
-    keywords: [business.name, category?.name, business.cityName].filter((value): value is string => Boolean(value)),
+    keywords: [business.name, category?.name, business.cityName].filter((value): value is string =>
+      Boolean(value),
+    ),
   })
 }
 
@@ -93,9 +95,7 @@ export default async function BusinessPage({ params }: PageProps) {
   // mènerait à une 404.
   const secondaryCategories = business.secondaryCategories.map((item) => ({
     ...item,
-    href: categories.some((category) => category.slug === item.slug)
-      ? routes.category(item.slug)
-      : null,
+    href: categories.some((category) => category.slug === item.slug) ? routes.category(item.slug) : null,
   }))
 
   const faqItems = [...business.faq, ...(category?.faq ?? [])]
@@ -127,7 +127,7 @@ export default async function BusinessPage({ params }: PageProps) {
           <div className="min-w-0 space-y-12">
             {(business.description || business.services.length > 0) && (
               <section aria-labelledby="presentation-heading">
-                <h2 id="presentation-heading" className="text-2xl font-bold tracking-tight text-ink-900">
+                <h2 id="presentation-heading" className="text-3xl font-medium text-ink-900">
                   À propos de {business.name}
                 </h2>
 
@@ -141,7 +141,7 @@ export default async function BusinessPage({ params }: PageProps) {
 
                 {secondaryCategories.length > 0 && (
                   <>
-                    <h3 className="mt-8 text-lg font-semibold text-ink-900">Également référencé en</h3>
+                    <h3 className="mt-10 text-xl font-medium text-ink-900">Également référencé en</h3>
                     <ul className="mt-3 flex flex-wrap gap-2">
                       {secondaryCategories.map((item) => (
                         <li key={item.slug}>
@@ -196,7 +196,7 @@ export default async function BusinessPage({ params }: PageProps) {
 
             {business.latitude !== undefined && business.longitude !== undefined && (
               <section aria-labelledby="map-heading">
-                <h2 id="map-heading" className="text-2xl font-bold tracking-tight text-ink-900">
+                <h2 id="map-heading" className="text-3xl font-medium text-ink-900">
                   Localisation
                 </h2>
                 <BusinessMap
@@ -231,7 +231,10 @@ export default async function BusinessPage({ params }: PageProps) {
                   <ul className="mt-6 space-y-4">
                     {reviews.map((review) => (
                       <li key={review.id}>
-                        <ReviewCard review={review} relativeDate={formatRelativeDate(review.publishedAt, now)} />
+                        <ReviewCard
+                          review={review}
+                          relativeDate={formatRelativeDate(review.publishedAt, now)}
+                        />
                       </li>
                     ))}
                   </ul>

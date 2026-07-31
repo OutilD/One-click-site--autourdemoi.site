@@ -43,11 +43,11 @@ export function BusinessCard({
   return (
     <article
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-card border border-ink-200 bg-white transition-shadow hover:shadow-lg hover:shadow-ink-900/5',
+        'group relative flex cursor-pointer flex-col overflow-hidden rounded-card border border-ink-200 bg-ink-50 transition-colors duration-200 hover:border-ink-900',
         className,
       )}
     >
-      <div className="relative aspect-16/10 overflow-hidden bg-ink-100">
+      <div className="relative aspect-16/10 overflow-hidden bg-ink-150">
         {business.coverImage ? (
           <SafeImage
             src={business.coverImage}
@@ -55,16 +55,24 @@ export function BusinessCard({
             fill
             sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
             priority={priority}
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div
             aria-hidden="true"
-            className="flex h-full w-full items-center justify-center bg-linear-to-br from-brand-50 to-ink-100"
+            className="flex h-full w-full items-center justify-center bg-linear-to-br from-ink-150 to-ink-100"
           >
-            <Icon icon={icons.photo} className="h-8 w-8 text-brand-300" />
+            {/* Une fiche sans photo ne doit pas laisser un trou noir dans la
+                grille : la pastille lui donne la même présence qu'un visuel. */}
+            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-ink-300 text-ink-400">
+              <Icon icon={icons.photo} className="h-4.5 w-4.5" />
+            </span>
           </div>
         )}
+
+        {/* Les étiquettes sont opaques : posées sur une couverture Google dont
+            on ne maîtrise ni la luminosité ni le sujet, c'est la seule façon de
+            garantir qu'elles restent lisibles sans voiler la photo. */}
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {categoryLabel && <Badge tone="brand">{categoryLabel}</Badge>}
           {business.isFeatured && (
@@ -75,28 +83,39 @@ export function BusinessCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-semibold leading-snug text-ink-900">
-            {/* Lien étendu : toute la carte est cliquable, un seul lien dans l'arbre. */}
-            <Link href={href} className="after:absolute after:inset-0 after:content-['']">
-              {business.name}
-            </Link>
-          </h3>
-          {business.isVerified && (
-            <Icon icon={icons.check} label="Établissement vérifié" className="shrink-0 text-brand-600" />
+      <div className="flex flex-1 flex-col p-5">
+        {/*
+          Le bloc de contenu absorbe la hauteur restante (`flex-1`), ce qui
+          pousse le pied de carte en bas. Dans une rangée, les notes s'alignent
+ donc quelle que soit la longueur des descriptions.
+        */}
+        <div className="flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-lg font-medium leading-snug text-ink-900 transition-colors duration-200 group-hover:text-brand-800">
+              {/* Lien étendu : toute la carte est cliquable, un seul lien dans l'arbre. */}
+              <Link href={href} className="after:absolute after:inset-0 after:content-['']">
+                {business.name}
+              </Link>
+            </h3>
+            {business.isVerified && (
+              <Icon
+                icon={icons.check}
+                label="Établissement vérifié"
+                className="mt-1.5 shrink-0 text-brand-700"
+              />
+            )}
+          </div>
+
+          {location && <p className="mt-1.5 text-sm text-ink-500">{location}</p>}
+
+          {business.shortDescription && (
+            <p className="mt-3 line-clamp-2-safe text-sm leading-relaxed text-ink-600">
+              {business.shortDescription}
+            </p>
           )}
         </div>
 
-        {location && <p className="mt-1 text-sm text-ink-500">{location}</p>}
-
-        {business.shortDescription && (
-          <p className="mt-2 line-clamp-2-safe text-sm leading-relaxed text-ink-600">
-            {business.shortDescription}
-          </p>
-        )}
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-ink-100 pt-3">
+        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-ink-200 pt-4">
           {business.rating !== null ? (
             <Rating value={business.rating} reviewCount={business.reviewCount} size="sm" />
           ) : (
@@ -116,9 +135,7 @@ export function BusinessCard({
           )}
 
           {openingLabel && (
-            <span
-              className={cn('ml-auto text-xs font-semibold', isOpen ? 'text-emerald-600' : 'text-ink-500')}
-            >
+            <span className={cn('ml-auto text-xs font-semibold', isOpen ? 'text-positive' : 'text-ink-500')}>
               {openingLabel}
             </span>
           )}

@@ -5,21 +5,29 @@ import { cn } from '@/utils/cn'
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
+/**
+ * Le jaune ne porte que du noir (13.3:1). L'action principale est donc un
+ * aplat jaune à texte noir, et l'action secondaire son négatif — un aplat noir
+ * à texte blanc. Deux niveaux francs, sans dégradé ni demi-teinte : c'est ce
+ * qui donne à l'annuaire son évidence de lecture.
+ */
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700 shadow-sm',
-  secondary: 'bg-ink-900 text-white hover:bg-ink-800 shadow-sm',
-  outline: 'border border-ink-300 bg-white text-ink-800 hover:bg-ink-50 hover:border-ink-400',
-  ghost: 'text-ink-700 hover:bg-ink-100',
+  primary: 'bg-brand-400 text-ink-900 hover:bg-brand-300',
+  secondary: 'bg-ink-900 text-ink-50 hover:bg-ink-700',
+  outline: 'border-2 border-ink-900 text-ink-900 hover:bg-ink-900 hover:text-ink-50',
+  ghost: 'text-ink-600 hover:bg-ink-100 hover:text-ink-900',
 }
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'h-9 px-3 text-sm gap-1.5',
+  sm: 'h-9 px-4 text-sm gap-1.5',
   md: 'h-11 px-5 text-sm gap-2',
   lg: 'h-12 px-6 text-base gap-2',
 }
 
+// Angles vifs plutôt que gélules : le registre est celui de l'imprimé
+// utilitaire, où la forme ne cherche pas à être douce.
 const BASE =
-  'inline-flex items-center justify-center rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex cursor-pointer items-center justify-center rounded-md font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50'
 
 interface CommonProps {
   variant?: ButtonVariant

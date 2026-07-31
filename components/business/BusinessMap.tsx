@@ -33,7 +33,7 @@ interface BusinessMapProps {
  * Deux sources possibles :
  * 1. `embedUrl` fournie par l'API (carte Google centrée sur la fiche) ;
  * 2. à défaut, le cadre embarqué d'OpenStreetMap à partir des coordonnées —
- *    ni clé d'API, ni dépendance.
+ * ni clé d'API, ni dépendance.
  *
  * Alternative écartée : Leaflet ou MapLibre offriraient un marqueur
  * personnalisé et un style maîtrisé, au prix d'environ 45 kB de JavaScript
@@ -64,7 +64,7 @@ export function BusinessMap({
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`
 
   return (
-    <div className={cn('overflow-hidden rounded-card border border-ink-200 bg-white', className)}>
+    <div className={cn('overflow-hidden rounded-card border border-ink-200 bg-ink-50', className)}>
       <iframe
         src={source}
         title={`Carte de localisation — ${label}`}

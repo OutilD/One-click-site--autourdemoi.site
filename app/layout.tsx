@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { IBM_Plex_Sans } from 'next/font/google'
 import './globals.css'
 import { Header, type NavLink } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -7,6 +8,22 @@ import { organizationJsonLd, websiteJsonLd } from '@/lib/jsonld'
 import { routes } from '@/lib/routes'
 import { siteConfig } from '@/lib/site'
 import { CategoryRepository } from '@/repositories'
+
+/**
+ * Police auto-hébergée par `next/font` : les fichiers sont récupérés au build
+ * et servis depuis le domaine. Aucune requête vers Google au runtime, donc
+ * aucun décalage de mise en page au chargement.
+ *
+ * IBM Plex Sans porte titres et interface. Une seule famille suffit : la
+ * hiérarchie d'un annuaire se lit à la graisse et à la casse. Quatre graisses
+ * seulement — Plex n'est pas variable sur Google Fonts, chacune est un fichier.
+ */
+const plex = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-plex',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -30,7 +47,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#2547eb',
+  themeColor: '#ffd400',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 }
@@ -70,7 +88,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   ]
 
   return (
-    <html lang={siteConfig.lang}>
+    <html lang={siteConfig.lang} className={plex.variable}>
       <body className="flex min-h-screen flex-col">
         <a href="#contenu" className="skip-link">
           Aller au contenu principal

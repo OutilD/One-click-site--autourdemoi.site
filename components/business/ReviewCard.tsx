@@ -24,7 +24,7 @@ const SOURCE_LABELS: Record<Review['source'], string> = {
 /** Avis client, avec réponse éventuelle du professionnel. */
 export function ReviewCard({ review, businessName, businessHref, relativeDate, className }: ReviewCardProps) {
   return (
-    <article className={cn('rounded-card border border-ink-200 bg-white p-5', className)}>
+    <article className={cn('rounded-card border border-ink-200 bg-ink-50 p-5', className)}>
       <header className="flex items-start gap-3">
         {review.authorAvatar ? (
           <SafeImage
@@ -32,13 +32,13 @@ export function ReviewCard({ review, businessName, businessHref, relativeDate, c
             alt=""
             width={40}
             height={40}
-            className="h-10 w-10 shrink-0 rounded-full bg-ink-100 object-cover"
+            className="h-10 w-10 shrink-0 rounded-full bg-ink-150 object-cover"
           />
         ) : (
           // L'API Google ne fournit pas d'avatar : monogramme de repli.
           <span
             aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50 font-semibold text-brand-700"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700"
           >
             {review.authorName.charAt(0).toUpperCase()}
           </span>
@@ -48,8 +48,8 @@ export function ReviewCard({ review, businessName, businessHref, relativeDate, c
           <p className="text-xs text-ink-500">
             {review.authorReviewCount !== undefined && (
               <>
-                {formatNumber(review.authorReviewCount)}{' '}
-                {pluralize(review.authorReviewCount, 'avis', 'avis')} publiés ·{' '}
+                {formatNumber(review.authorReviewCount)} {pluralize(review.authorReviewCount, 'avis', 'avis')}{' '}
+                publiés ·{' '}
               </>
             )}
             {SOURCE_LABELS[review.source]}
@@ -84,10 +84,8 @@ export function ReviewCard({ review, businessName, businessHref, relativeDate, c
       </footer>
 
       {review.reply && (
-        <div className="mt-4 rounded-xl border-l-4 border-brand-300 bg-ink-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-            Réponse du professionnel
-          </p>
+        <div className="mt-4 rounded-xl border-l-4 border-brand-500 bg-ink-150 p-4">
+          <p className="eyebrow font-sans">Réponse du professionnel</p>
           <p className="mt-1.5 text-sm leading-relaxed text-ink-700">{review.reply.content}</p>
         </div>
       )}

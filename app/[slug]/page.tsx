@@ -112,7 +112,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         lead={category.description}
         editorial={
           <>
-            <h2 className="text-xl font-bold text-ink-900">
+            <h2 className="text-2xl font-medium text-ink-900">
               Comment choisir parmi {formatNumber(result.total)} {category.pluralName.toLowerCase()} ?
             </h2>
             <p>

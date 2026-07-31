@@ -33,7 +33,7 @@ export function BusinessHeader({
 
   return (
     <header>
-      <div className="relative aspect-21/9 max-h-80 w-full overflow-hidden rounded-card bg-ink-200">
+      <div className="relative aspect-21/9 max-h-80 w-full overflow-hidden rounded-card bg-ink-150">
         {business.coverImage ? (
           <SafeImage
             src={business.coverImage}
@@ -44,24 +44,24 @@ export function BusinessHeader({
             className="object-cover"
           />
         ) : (
-          <div aria-hidden="true" className="h-full w-full bg-linear-to-br from-brand-100 to-ink-200" />
+          <div aria-hidden="true" className="h-full w-full bg-linear-to-br from-brand-50 to-ink-150" />
         )}
       </div>
 
       <div className="relative -mt-12 px-4 sm:px-8">
-        <div className="flex flex-col gap-4 rounded-card border border-ink-200 bg-white p-5 shadow-sm sm:flex-row sm:items-start sm:gap-6 sm:p-6">
+        <div className="flex flex-col gap-4 rounded-card border border-ink-200 bg-ink-50 p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-6">
           {business.logo ? (
             <SafeImage
               src={business.logo}
               alt={`Logo de ${business.name}`}
               width={88}
               height={88}
-              className="h-20 w-20 shrink-0 rounded-2xl border border-ink-200 bg-white object-cover"
+              className="h-20 w-20 shrink-0 rounded-2xl border border-ink-200 bg-ink-50 object-cover"
             />
           ) : (
             <span
               aria-hidden="true"
-              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-ink-200 bg-brand-50 text-3xl font-bold text-brand-700"
+              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-ink-200 bg-brand-100 text-3xl font-medium text-brand-700"
             >
               {business.name.charAt(0).toUpperCase()}
             </span>
@@ -85,7 +85,7 @@ export function BusinessHeader({
               {openingLabel && <Badge tone={isOpen ? 'success' : 'neutral'}>{openingLabel}</Badge>}
             </div>
 
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">{business.name}</h1>
+            <h1 className="mt-3 text-3xl font-medium text-ink-900 sm:text-4xl">{business.name}</h1>
 
             {(addressLine || cityLabel) && (
               <p className="mt-1 text-ink-600">

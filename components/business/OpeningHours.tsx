@@ -21,18 +21,21 @@ export function OpeningHours({ hours, todayKey, className }: OpeningHoursProps) 
           const isClosed = ranges.length === 0
 
           return (
-            <tr key={day} className={cn('border-b border-ink-100 last:border-0', isToday && 'bg-brand-50')}>
+            <tr
+              key={day}
+              className={cn('border-b border-ink-200 last:border-0', isToday && 'bg-brand-100/50')}
+            >
               <th
                 scope="row"
                 className={cn('py-2 pl-2 text-left font-medium', isToday ? 'text-brand-800' : 'text-ink-600')}
               >
                 {DAY_LABELS[day]}
-                {isToday && <span className="ml-1.5 text-xs font-normal text-brand-600">(aujourd’hui)</span>}
+                {isToday && <span className="ml-1.5 text-xs font-normal text-brand-700">(aujourd’hui)</span>}
               </th>
               <td
                 className={cn(
                   'py-2 pr-2 text-right tabular-nums',
-                  isClosed ? 'text-ink-400' : isToday ? 'font-semibold text-brand-800' : 'text-ink-800',
+                  isClosed ? 'text-ink-500' : isToday ? 'font-semibold text-brand-800' : 'text-ink-800',
                 )}
               >
                 {formatDayRanges(ranges)}

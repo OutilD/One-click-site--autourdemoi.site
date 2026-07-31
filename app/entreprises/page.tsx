@@ -98,10 +98,10 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
       <Breadcrumb items={breadcrumbItems} />
 
       <div className="mt-6">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+        <h1 className="text-4xl font-medium text-ink-900">
           {activeCategory ? activeCategory.pluralName : 'Toutes les entreprises'}
         </h1>
-        <p className="mt-2 text-ink-600">
+        <p className="mt-4 text-lg text-ink-500">
           {formatNumber(result.total)} {pluralize(result.total, 'établissement')}{' '}
           {params.q ? (
             <>
@@ -172,10 +172,7 @@ export default async function BusinessesPage({ searchParams }: PageProps) {
       </div>
 
       <JsonLd
-        data={[
-          breadcrumbJsonLd(breadcrumbItems),
-          itemListJsonLd(result.items, 'Entreprises référencées'),
-        ]}
+        data={[breadcrumbJsonLd(breadcrumbItems), itemListJsonLd(result.items, 'Entreprises référencées')]}
       />
     </Container>
   )

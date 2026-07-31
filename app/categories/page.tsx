@@ -28,16 +28,16 @@ export default async function CategoriesPage() {
       <Breadcrumb items={breadcrumbItems} />
 
       <div className="mt-6 max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
+        <h1 className="text-4xl font-medium text-ink-900 sm:text-5xl">
           Toutes les catégories de professionnels
         </h1>
-        <p className="mt-3 leading-relaxed text-ink-600">
+        <p className="mt-5 text-lg leading-relaxed text-ink-500">
           {categories.length} catégories d’activité couvertes par l’annuaire. Chaque catégorie regroupe les
           établissements de sa spécialité, avec leurs avis, horaires et coordonnées.
         </p>
       </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
           <CategoryCard
             key={category.slug}

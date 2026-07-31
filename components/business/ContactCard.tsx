@@ -23,7 +23,10 @@ const SOCIAL_NETWORKS = {
  * Les liens sortants sont en `nofollow` (bonne pratique annuaire).
  */
 export function ContactCard({ business, className }: ContactCardProps) {
-  const socialEntries = Object.entries(business.social).filter(([, url]) => Boolean(url)) as [string, string][]
+  const socialEntries = Object.entries(business.social).filter(([, url]) => Boolean(url)) as [
+    string,
+    string,
+  ][]
 
   const addressParts = [business.address, [business.postalCode, business.cityName].filter(Boolean).join(' ')]
     .map((part) => part?.trim())
@@ -36,10 +39,10 @@ export function ContactCard({ business, className }: ContactCardProps) {
 
   return (
     <section
-      className={cn('rounded-card border border-ink-200 bg-white p-5', className)}
+      className={cn('rounded-card border border-ink-200 bg-ink-50 p-5', className)}
       aria-labelledby="contact-heading"
     >
-      <h2 id="contact-heading" className="text-lg font-semibold text-ink-900">
+      <h2 id="contact-heading" className="text-xl font-medium text-ink-900">
         Coordonnées
       </h2>
 
@@ -138,8 +141,8 @@ export function ContactCard({ business, className }: ContactCardProps) {
       </div>
 
       {socialEntries.length > 0 && (
-        <div className="mt-5 border-t border-ink-100 pt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Réseaux sociaux</h3>
+        <div className="mt-5 border-t border-ink-200 pt-4">
+          <h3 className="eyebrow font-sans">Réseaux sociaux</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
             {socialEntries.map(([key, url]) => {
               const network = SOCIAL_NETWORKS[key as keyof typeof SOCIAL_NETWORKS]
@@ -151,7 +154,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer nofollow"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-ink-100 text-ink-700 hover:bg-ink-200"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-300 text-ink-600 transition-colors duration-200 hover:border-ink-900 hover:text-brand-700"
                   >
                     <Icon icon={network.icon} label={network.label} />
                   </a>

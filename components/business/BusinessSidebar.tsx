@@ -33,9 +33,9 @@ export function BusinessSidebar({
       <ContactCard business={business} />
 
       {hasHours && (
-        <section className="rounded-card border border-ink-200 bg-white p-5" aria-labelledby="hours-heading">
+        <section className="rounded-card border border-ink-200 bg-ink-50 p-5" aria-labelledby="hours-heading">
           <div className="flex items-center justify-between gap-3">
-            <h2 id="hours-heading" className="text-lg font-semibold text-ink-900">
+            <h2 id="hours-heading" className="text-xl font-medium text-ink-900">
               Horaires
             </h2>
             {openingLabel && <Badge tone={isOpen ? 'success' : 'neutral'}>{openingLabel}</Badge>}
@@ -45,10 +45,8 @@ export function BusinessSidebar({
           </div>
 
           {business.specialHours.length > 0 && (
-            <div className="mt-4 border-t border-ink-100 pt-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                Horaires exceptionnels
-              </h3>
+            <div className="mt-4 border-t border-ink-200 pt-4">
+              <h3 className="eyebrow font-sans">Horaires exceptionnels</h3>
               <ul className="mt-2 space-y-1 text-sm text-ink-700">
                 {business.specialHours.map((entry) => (
                   <li key={entry.date} className="flex justify-between gap-3">
@@ -65,14 +63,17 @@ export function BusinessSidebar({
       )}
 
       {business.attributes.length > 0 && (
-        <section className="rounded-card border border-ink-200 bg-white p-5" aria-labelledby="attributes-heading">
-          <h2 id="attributes-heading" className="text-lg font-semibold text-ink-900">
+        <section
+          className="rounded-card border border-ink-200 bg-ink-50 p-5"
+          aria-labelledby="attributes-heading"
+        >
+          <h2 id="attributes-heading" className="text-xl font-medium text-ink-900">
             Informations pratiques
           </h2>
           <ul className="mt-4 space-y-2 text-sm text-ink-700">
             {business.attributes.map((attribute) => (
               <li key={attribute} className="flex items-start gap-2">
-                <Icon icon={icons.check} className="mt-1 text-emerald-600" />
+                <Icon icon={icons.check} className="mt-1 text-positive" />
                 {attribute}
               </li>
             ))}
@@ -81,8 +82,11 @@ export function BusinessSidebar({
       )}
 
       {business.paymentMethods.length > 0 && (
-        <section className="rounded-card border border-ink-200 bg-white p-5" aria-labelledby="payment-heading">
-          <h2 id="payment-heading" className="text-lg font-semibold text-ink-900">
+        <section
+          className="rounded-card border border-ink-200 bg-ink-50 p-5"
+          aria-labelledby="payment-heading"
+        >
+          <h2 id="payment-heading" className="text-xl font-medium text-ink-900">
             Moyens de paiement
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2">
@@ -96,8 +100,8 @@ export function BusinessSidebar({
       )}
 
       {hasLegalInfo && (
-        <section className="rounded-card border border-ink-200 bg-white p-5" aria-labelledby="legal-heading">
-          <h2 id="legal-heading" className="text-lg font-semibold text-ink-900">
+        <section className="rounded-card border border-ink-200 bg-ink-50 p-5" aria-labelledby="legal-heading">
+          <h2 id="legal-heading" className="text-xl font-medium text-ink-900">
             Informations légales
           </h2>
           <dl className="mt-4 space-y-2 text-sm">

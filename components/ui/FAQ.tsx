@@ -23,24 +23,28 @@ export function FAQ({ items, title = 'Questions fréquentes', defaultOpenFirst =
 
   return (
     <section className={cn('', className)} aria-labelledby="faq-heading">
-      <h2 id="faq-heading" className="text-2xl font-bold tracking-tight text-ink-900">
+      <p className="eyebrow mb-3">
+        <span aria-hidden="true" className="h-px w-7 bg-brand-400" />
+        Bon à savoir
+      </p>
+      <h2 id="faq-heading" className="text-3xl font-medium text-ink-900">
         {title}
       </h2>
-      <div className="mt-6 divide-y divide-ink-200 overflow-hidden rounded-card border border-ink-200 bg-white">
+      <div className="mt-8 divide-y divide-ink-200 overflow-hidden rounded-card border border-ink-200 bg-ink-50">
         {items.map((item, index) => (
           <details
             key={item.question}
             open={defaultOpenFirst && index === 0}
-            className="group px-5 py-4 open:bg-ink-50/60"
+            className="group px-5 py-4 transition-colors duration-200 open:bg-ink-150/70"
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink-900 [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-ink-900 [&::-webkit-details-marker]:hidden">
               {item.question}
               <Icon
                 icon={icons.plus}
-                className="shrink-0 text-ink-400 transition-transform group-open:rotate-45"
+                className="shrink-0 text-brand-700 transition-transform duration-200 group-open:rotate-45"
               />
             </summary>
-            <p className="mt-3 text-sm leading-relaxed text-ink-600">{item.answer}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-500">{item.answer}</p>
           </details>
         ))}
       </div>

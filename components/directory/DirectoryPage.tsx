@@ -70,19 +70,24 @@ export function DirectoryPage({
   emptyAction,
 }: DirectoryPageProps) {
   return (
-    <Container size="wide" className="py-8">
+    <Container size="wide" className="py-10">
       <Breadcrumb items={breadcrumbItems} />
 
-      <header className="mt-6 max-w-3xl">
-        <h1 className="flex items-start gap-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
-          {icon && <Icon icon={categoryIcon(icon)} className="mt-1 h-7 w-7 text-brand-600" />}
-          {heading}
-        </h1>
-        <p className="mt-3 leading-relaxed text-ink-600">{lead}</p>
+      <header className="mt-8 max-w-3xl">
+        {icon && (
+          <span
+            aria-hidden="true"
+            className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-brand-500 bg-brand-100 text-brand-700"
+          >
+            <Icon icon={categoryIcon(icon)} className="h-5 w-5" />
+          </span>
+        )}
+        <h1 className="text-4xl font-medium leading-[1.1] text-ink-900 sm:text-5xl">{heading}</h1>
+        <p className="mt-5 text-lg leading-relaxed text-ink-500">{lead}</p>
       </header>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-ink-200 pb-4">
-        <p className="text-sm font-medium text-ink-700">
+      <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-b border-ink-200 pb-4">
+        <p className="text-sm font-medium tabular-nums text-ink-700">
           {formatNumber(total)} {pluralize(total, 'établissement')}
           {totalPages > 1 && (
             <span className="font-normal text-ink-500">
@@ -120,26 +125,30 @@ export function DirectoryPage({
       )}
 
       {editorial && (
-        <section className="mt-16 max-w-3xl border-t border-ink-200 pt-10">
-          <div className="space-y-4 leading-relaxed text-ink-700">{editorial}</div>
+        <section className="mt-20 max-w-2xl">
+          <hr className="rule-heavy mb-10" />
+          {/* Colonne de texte volontairement étroite : au-delà de ~70 signes
+              par ligne, l'œil décroche en fin de ligne. */}
+          <div className="space-y-4 leading-[1.75] text-ink-600">{editorial}</div>
         </section>
       )}
 
       {linkSections.length > 0 && (
-        <section className="mt-16 border-t border-ink-200 pt-10" aria-labelledby="related-heading">
+        <section className="mt-20" aria-labelledby="related-heading">
+          <hr className="rule-heavy mb-10" />
           <h2 id="related-heading" className="sr-only">
             Navigation associée
           </h2>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {linkSections.map((section) => (
               <div key={section.title}>
-                <h3 className="text-sm font-semibold text-ink-900">{section.title}</h3>
-                <ul className="mt-3 space-y-1.5">
+                <h3 className="eyebrow font-sans">{section.title}</h3>
+                <ul className="mt-4 space-y-2.5">
                   {section.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-ink-600 hover:text-brand-700 hover:underline"
+                        className="text-sm text-ink-500 transition-colors duration-200 hover:text-ink-900"
                       >
                         {link.label}
                       </Link>
