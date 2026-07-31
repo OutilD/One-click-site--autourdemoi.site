@@ -1,9 +1,20 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { siteConfig } from '@/lib/site'
 
 export const alt = `${siteConfig.name} — ${siteConfig.tagline}`
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+
+/**
+ * Logo embarqué en base64.
+ *
+ * La génération a lieu au build : le fichier est lu sur le disque et intégré
+ * à l'image, plutôt que référencé par URL. L'image de partage reste ainsi
+ * autonome — aucune requête réseau, et rien à résoudre côté réseau social.
+ */
+const LOGO = `data:image/png;base64,${readFileSync(join(process.cwd(), 'public', 'logo.png')).toString('base64')}`
 
 /**
  * Image OpenGraph par défaut, générée sans ressource externe
@@ -19,48 +30,53 @@ export default function OpengraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '80px',
-          background: 'linear-gradient(135deg, #1d35d8 0%, #2547eb 55%, #608cfa 100%)',
-          color: 'white',
+          padding: '68px 80px',
+          // L'aplat jaune du héros, transposé au format carte : dans un fil
+          // d'actualité, c'est la couleur qui identifie le site avant le texte.
+          background: '#ffd400',
+          color: '#12100d',
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, fontSize: 40, opacity: 0.9 }}>
-          {/* Marque dessinée en CSS : aucun glyphe exotique, donc aucun
-              téléchargement de police au moment de la génération. */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 72,
-              height: 72,
-              borderRadius: 20,
-              background: 'rgba(255,255,255,0.18)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                width: 34,
-                height: 34,
-                borderRadius: 999,
-                border: '6px solid white',
-              }}
-            />
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22, fontSize: 38, fontWeight: 700 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- `next/image` n'existe pas dans le rendu Satori. */}
+          <img src={LOGO} width={88} height={88} alt="" />
           {siteConfig.name}
         </div>
 
-        <div style={{ marginTop: 40, fontSize: 76, fontWeight: 700, lineHeight: 1.1, letterSpacing: -2 }}>
+        {/*
+          64 px et non 76 : à 76, l'accroche tenait sur trois lignes trop hautes
+          et la carte débordait, si bien que `marginTop: auto` se repliait et
+          que le filet du bas venait chevaucher la ligne de mentions.
+        */}
+        <div
+          style={{
+            marginTop: 44,
+            fontSize: 64,
+            fontWeight: 700,
+            lineHeight: 1.08,
+            letterSpacing: -1.5,
+            maxWidth: 940,
+          }}
+        >
           {siteConfig.tagline}
         </div>
 
-        <div style={{ marginTop: 32, fontSize: 32, opacity: 0.85 }}>
+        <div style={{ marginTop: 24, fontSize: 28, color: '#46423a' }}>
           Avis vérifiés · Horaires · Coordonnées · Photos
         </div>
 
-        <div style={{ marginTop: 'auto', fontSize: 28, opacity: 0.7 }}>{siteConfig.domain}</div>
+        <div
+          style={{
+            marginTop: 'auto',
+            paddingTop: 32,
+            borderTop: '2px solid #12100d',
+            fontSize: 26,
+            fontWeight: 600,
+          }}
+        >
+          {siteConfig.domain}
+        </div>
       </div>
     ),
     size,
