@@ -108,8 +108,14 @@ export function sizeGooglePhoto(url: string, size: number): string {
   return `${withoutOptions}=s${size}`
 }
 
-/** Tailles demandées au CDN selon l'usage du visuel. */
-const PHOTO_SIZES = { logo: 400, cover: 1600, gallery: 1600 } as const
+/**
+ * Tailles demandées au CDN selon l'usage du visuel.
+ *
+ * Chaque valeur couvre le plus grand emplacement de rendu en densité 2×. Les
+ * visuels de publication ne dépassent jamais 380 px CSS (`GooglePost`), d'où
+ * une source à 800 px.
+ */
+const PHOTO_SIZES = { logo: 400, cover: 1600, gallery: 1600, post: 800 } as const
 
 /**
  * Construit l'URL du widget d'avis : origine maîtrisée et paramètres imposés.
@@ -321,7 +327,7 @@ export function toPost(dto: LsPost, businessId: string, businessPhone?: string):
     title,
     excerpt,
     content: paragraphs,
-    image: dto.imageUrls[0] ?? '',
+    image: dto.imageUrls[0] ? sizeGooglePhoto(dto.imageUrls[0], PHOTO_SIZES.post) : '',
     publishedAt: dto.publishedAt,
     ...(dto.callToAction && ctaUrl
       ? { ctaLabel: CTA_LABELS[dto.callToAction.type] ?? 'En savoir plus', ctaUrl }
@@ -359,7 +365,7 @@ export function toFeedPost(dto: LsFeedPost): Post {
     title,
     excerpt,
     content: paragraphs,
-    image: dto.imageUrl ?? '',
+    image: dto.imageUrl ? sizeGooglePhoto(dto.imageUrl, PHOTO_SIZES.post) : '',
     publishedAt: dto.publishedAt,
   }
 }
