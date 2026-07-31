@@ -16,6 +16,7 @@ import { ReviewCard } from '@/components/business/ReviewCard'
 import { ReviewSummary } from '@/components/business/ReviewSummary'
 import { ReviewsWidget } from '@/components/business/ReviewsWidget'
 import { GooglePost } from '@/components/business/GooglePost'
+import { ServiceList } from '@/components/business/ServiceList'
 import { BusinessGrid } from '@/components/directory/BusinessGrid'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbJsonLd, faqJsonLd, localBusinessJsonLd } from '@/lib/jsonld'
@@ -160,18 +161,8 @@ export default async function BusinessPage({ params }: PageProps) {
 
                 {business.services.length > 0 && (
                   <>
-                    <h3 className="mt-8 text-lg font-semibold text-ink-900">Prestations</h3>
-                    <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                      {business.services.map((service) => (
-                        <li
-                          key={service}
-                          className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-ink-700 ring-1 ring-ink-200"
-                        >
-                          <Icon icon={icons.check} className="mt-1 text-brand-600" />
-                          {service}
-                        </li>
-                      ))}
-                    </ul>
+                    <h3 className="mt-10 text-xl font-medium text-ink-900">Prestations</h3>
+                    <ServiceList services={business.services} className="mt-3" />
                   </>
                 )}
               </section>
