@@ -282,6 +282,7 @@ export default async function HomePage() {
                     post={post}
                     businessName={business?.name}
                     businessHref={business ? routes.business(business.slug) : undefined}
+                    businessWebsite={business?.website}
                     className="w-full"
                   />
                 </li>

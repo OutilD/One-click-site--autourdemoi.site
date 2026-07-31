@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge'
 import type { Post, PostType } from '@/types'
 import { Icon } from '@/components/ui/Icon'
 import { icons } from '@/lib/icons'
+import { outboundRel } from '@/lib/outbound'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
 import { PostDialog } from './PostDialog'
@@ -13,6 +14,11 @@ interface GooglePostProps {
   /** Affiché hors page entreprise (accueil, flux de publications). */
   businessName?: string
   businessHref?: string
+  /**
+   * Site déclaré de l'établissement. Sert à décider si le bouton d'action
+   * mène chez lui — auquel cas le lien est suivi — ou vers un tiers.
+   */
+  businessWebsite?: string
   className?: string
 }
 
@@ -50,8 +56,15 @@ function OfferNote({ offer }: { offer: NonNullable<Post['offer']> }) {
  * 615 signes en médiane — la totalité du texte n'était donc jamais lisible.
  * Un clic sur la carte ouvre le détail complet dans une surcouche modale.
  */
-export function GooglePost({ post, businessName, businessHref, className }: GooglePostProps) {
+export function GooglePost({
+  post,
+  businessName,
+  businessHref,
+  businessWebsite,
+  className,
+}: GooglePostProps) {
   const meta = TYPE_META[post.type]
+  const ctaRel = post.ctaUrl ? outboundRel(post.ctaUrl, businessWebsite) : undefined
 
   const attribution = businessName && businessHref && (
     <>
@@ -129,7 +142,7 @@ export function GooglePost({ post, businessName, businessHref, className }: Goog
           {post.ctaLabel && post.ctaUrl && (
             <a
               href={post.ctaUrl}
-              rel="noopener noreferrer nofollow"
+              rel={ctaRel}
               target="_blank"
               className="relative z-10 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline"
             >
@@ -178,7 +191,7 @@ export function GooglePost({ post, businessName, businessHref, className }: Goog
           {post.ctaLabel && post.ctaUrl && (
             <a
               href={post.ctaUrl}
-              rel="noopener noreferrer nofollow"
+              rel={ctaRel}
               target="_blank"
               className="mt-6 inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md bg-brand-400 px-5 text-sm font-semibold text-ink-900 transition-colors duration-150 hover:bg-brand-300"
             >

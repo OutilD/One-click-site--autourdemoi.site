@@ -2,6 +2,7 @@ import type { Business } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { icons } from '@/lib/icons'
+import { BUSINESS_SITE_REL, THIRD_PARTY_REL } from '@/lib/outbound'
 import { cn } from '@/utils/cn'
 import { formatPhone, formatWebsiteLabel, toTelHref } from '@/utils/format'
 
@@ -18,10 +19,7 @@ const SOCIAL_NETWORKS = {
   tiktok: { label: 'TikTok', icon: icons.tiktok },
 } as const
 
-/**
- * Coordonnées et boutons d'action d'un établissement.
- * Les liens sortants sont en `nofollow` (bonne pratique annuaire).
- */
+/** Coordonnées et boutons d'action d'un établissement. */
 export function ContactCard({ business, className }: ContactCardProps) {
   const socialEntries = Object.entries(business.social).filter(([, url]) => Boolean(url)) as [
     string,
@@ -100,7 +98,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
               <a
                 href={business.website}
                 target="_blank"
-                rel="noopener noreferrer nofollow"
+                rel={BUSINESS_SITE_REL}
                 className="break-all font-medium text-brand-700 hover:underline"
               >
                 {formatWebsiteLabel(business.website)}
@@ -122,7 +120,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
             variant="outline"
             fullWidth
             target="_blank"
-            rel="noopener noreferrer nofollow"
+            rel={BUSINESS_SITE_REL}
           >
             <Icon icon={icons.website} /> Visiter le site
           </Button>
@@ -133,7 +131,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
             variant="outline"
             fullWidth
             target="_blank"
-            rel="noopener noreferrer nofollow"
+            rel={THIRD_PARTY_REL}
           >
             <Icon icon={icons.directions} /> Itinéraire
           </Button>
@@ -153,7 +151,7 @@ export function ContactCard({ business, className }: ContactCardProps) {
                   <a
                     href={url}
                     target="_blank"
-                    rel="noopener noreferrer nofollow"
+                    rel={THIRD_PARTY_REL}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-300 text-ink-600 transition-colors duration-200 hover:border-ink-900 hover:text-brand-700"
                   >
                     <Icon icon={network.icon} label={network.label} />

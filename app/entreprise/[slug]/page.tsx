@@ -256,7 +256,7 @@ export default async function BusinessPage({ params }: PageProps) {
                 <ul className="mt-6 grid gap-5 sm:grid-cols-2">
                   {posts.map((post) => (
                     <li key={post.id} className="flex">
-                      <GooglePost post={post} className="w-full" />
+                      <GooglePost post={post} businessWebsite={business.website} className="w-full" />
                     </li>
                   ))}
                 </ul>
