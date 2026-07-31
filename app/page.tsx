@@ -293,13 +293,24 @@ export default async function HomePage() {
 
       {/* ────────────────────────── Dernières photos ──────────────────────── */}
       {latestPhotos.length > 0 && (
-      <Container size="wide" as="section" className="py-14">
-        <SectionHeading
-          title="Dernières photos"
-          description="Un aperçu des établissements référencés dans l’annuaire."
+        // L'en-tête et le filet sont confiés à `PhotoGrid` : si aucune photo ne
+        // charge, la section disparaît en entier plutôt que de laisser un titre
+        // au-dessus du vide.
+        <PhotoGrid
+          photos={latestPhotos}
+          columns={4}
+          className="pb-20"
+          heading={
+            <>
+              <hr className="rule-heavy mb-20" />
+              <SectionHeading
+                eyebrow="05 — En images"
+                title="Dernières photos"
+                description="Un aperçu des établissements référencés dans l’annuaire."
+              />
+            </>
+          }
         />
-        <PhotoGrid photos={latestPhotos} columns={4} className="mt-8" />
-      </Container>
       )}
 
       {/* ──────────────────────────────── FAQ ─────────────────────────────── */}

@@ -178,20 +178,22 @@ export default async function BusinessPage({ params }: PageProps) {
             )}
 
             {photos.length > 0 && (
-              <section aria-labelledby="gallery-heading">
-                <SectionHeading
-                  title="Photos"
-                  description={
-                    detail.photos.length > photos.length
-                      ? `Les ${photos.length} photos les plus récentes, sur ${detail.photos.length} publiées.`
-                      : `${photos.length} ${pluralize(photos.length, 'photo')} ${pluralize(photos.length, 'publiée', 'publiées')} par l’établissement.`
-                  }
-                />
-                <Gallery
-                  images={photos.map((photo) => ({ url: photo.url, alt: photo.alt }))}
-                  className="mt-6"
-                />
-              </section>
+              // L'en-tête est confié à `Gallery` : si aucune photo ne charge,
+              // la section disparaît en entier plutôt que de laisser un titre
+              // « Photos » au-dessus du vide.
+              <Gallery
+                images={photos.map((photo) => ({ url: photo.url, alt: photo.alt }))}
+                heading={
+                  <SectionHeading
+                    title="Photos"
+                    description={
+                      detail.photos.length > photos.length
+                        ? `Les ${photos.length} photos les plus récentes, sur ${detail.photos.length} publiées.`
+                        : `${photos.length} ${pluralize(photos.length, 'photo')} ${pluralize(photos.length, 'publiée', 'publiées')} par l’établissement.`
+                    }
+                  />
+                }
+              />
             )}
 
             {business.latitude !== undefined && business.longitude !== undefined && (
