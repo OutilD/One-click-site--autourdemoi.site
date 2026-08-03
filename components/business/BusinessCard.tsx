@@ -40,6 +40,31 @@ export function BusinessCard({
   const location = locationLabel(business)
   const altText = [business.name, categoryLabel, business.cityName].filter(Boolean).join(' — ')
 
+  // Dernier étage du repli : l'initiale, qui ne peut jamais échouer.
+  const monogram = (
+    <span
+      aria-hidden="true"
+      className="flex h-full w-full items-center justify-center bg-brand-100 text-5xl font-bold text-brand-700"
+    >
+      {business.name.charAt(0).toUpperCase()}
+    </span>
+  )
+
+  // Étage intermédiaire : la photo de profil, cadrée en `contain` — un logo
+  // recadré en `cover` serait rogné sur ses bords.
+  const logoOrMonogram = business.logo ? (
+    <SafeImage
+      src={business.logo}
+      alt={altText}
+      fill
+      sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
+      className="bg-ink-50 object-contain p-10"
+      fallback={monogram}
+    />
+  ) : (
+    monogram
+  )
+
   return (
     <article
       className={cn(
@@ -48,6 +73,13 @@ export function BusinessCard({
       )}
     >
       <div className="relative aspect-16/10 overflow-hidden bg-ink-150">
+        {/*
+          Repli en cascade : couverture, puis photo de profil, puis initiale.
+
+          Chaque étage sert aussi bien l'absence d'URL que l'URL morte —
+          `SafeImage` bascule sur son `fallback` quand le chargement échoue.
+          Aucune carte ne peut donc rester vide.
+        */}
         {business.coverImage ? (
           <SafeImage
             src={business.coverImage}
@@ -56,18 +88,10 @@ export function BusinessCard({
             sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
             priority={priority}
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            fallback={logoOrMonogram}
           />
         ) : (
-          <div
-            aria-hidden="true"
-            className="flex h-full w-full items-center justify-center bg-linear-to-br from-ink-150 to-ink-100"
-          >
-            {/* Une fiche sans photo ne doit pas laisser un trou noir dans la
-                grille : la pastille lui donne la même présence qu'un visuel. */}
-            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-ink-300 text-ink-400">
-              <Icon icon={icons.photo} className="h-4.5 w-4.5" />
-            </span>
-          </div>
+          logoOrMonogram
         )}
 
         {/* Les étiquettes sont opaques : posées sur une couverture Google dont
