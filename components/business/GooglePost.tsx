@@ -22,10 +22,23 @@ interface GooglePostProps {
   className?: string
 }
 
-const TYPE_META: Record<PostType, { label: string; tone: 'brand' | 'success' | 'warning' }> = {
-  update: { label: 'Actualité', tone: 'brand' },
-  offer: { label: 'Offre', tone: 'warning' },
-  event: { label: 'Événement', tone: 'success' },
+/**
+ * Le pictogramme sert de repli visuel : une publication sans image affiche la
+ * nature de son contenu plutôt qu'un cadre vide.
+ *
+ * Une offre montre un coupon, un événement un calendrier — sans ambiguïté. Une
+ * actualité n'a pas d'équivalent dans le jeu d'icônes : on y met le
+ * pictogramme d'image, qui dit honnêtement « visuel indisponible » là où une
+ * couronne ou une caméra induiraient en erreur. L'étiquette posée par-dessus
+ * porte déjà le type.
+ */
+const TYPE_META: Record<
+  PostType,
+  { label: string; tone: 'brand' | 'success' | 'warning'; icon: typeof icons.photo }
+> = {
+  update: { label: 'Actualité', tone: 'brand', icon: icons.photo },
+  offer: { label: 'Offre', tone: 'warning', icon: icons.coupon },
+  event: { label: 'Événement', tone: 'success', icon: icons.calendar },
 }
 
 /** Encadré d'événement — mêmes informations sur la carte et dans le dialogue. */
@@ -66,6 +79,22 @@ export function GooglePost({
   const meta = TYPE_META[post.type]
   const ctaRel = post.ctaUrl ? outboundRel(post.ctaUrl, businessWebsite) : undefined
 
+  /*
+    Repli du visuel : aplat de marque et pictogramme du type de publication.
+
+    La taille passe par `text-4xl` et non par `h-10 w-10` : `Icon` se
+    dimensionne en `1em`, et une classe de hauteur ne l'emporte pas de façon
+    fiable sur la valeur arbitraire posée par le composant.
+  */
+  const visualFallback = (
+    <span
+      aria-hidden="true"
+      className="flex h-full w-full items-center justify-center bg-brand-100 text-4xl text-brand-700"
+    >
+      <Icon icon={meta.icon} />
+    </span>
+  )
+
   const attribution = businessName && businessHref && (
     <>
       Publié par{' '}
@@ -85,13 +114,18 @@ export function GooglePost({
       )}
     >
       <div className="relative aspect-16/9 bg-ink-150">
-        <SafeImage
-          src={post.image}
-          alt={post.title}
-          fill
-          sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover"
-        />
+        {post.image ? (
+          <SafeImage
+            src={post.image}
+            alt={post.title}
+            fill
+            sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+            fallback={visualFallback}
+          />
+        ) : (
+          visualFallback
+        )}
         <div className="absolute left-3 top-3 flex gap-1.5">
           <Badge tone={meta.tone}>{meta.label}</Badge>
           {post.offer && <Badge tone="danger">{post.offer.label}</Badge>}
@@ -154,7 +188,18 @@ export function GooglePost({
 
       <PostDialog title={post.title}>
         <div className="relative aspect-16/9 overflow-hidden rounded-t-card bg-ink-150">
-          <SafeImage src={post.image} alt={post.title} fill sizes="(min-width: 768px) 672px, 100vw" className="object-cover" />
+          {post.image ? (
+            <SafeImage
+              src={post.image}
+              alt={post.title}
+              fill
+              sizes="(min-width: 768px) 672px, 100vw"
+              className="object-cover"
+              fallback={visualFallback}
+            />
+          ) : (
+            visualFallback
+          )}
         </div>
 
         <div className="p-6 sm:p-8">
