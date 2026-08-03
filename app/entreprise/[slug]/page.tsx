@@ -99,7 +99,17 @@ export default async function BusinessPage({ params }: PageProps) {
     href: categories.some((category) => category.slug === item.slug) ? routes.category(item.slug) : null,
   }))
 
-  const faqItems = [...business.faq, ...(category?.faq ?? [])]
+  /*
+    La FAQ réunit deux sources — les questions propres à l'établissement et
+    celles de sa catégorie — qui se recoupent. La même question s'affichait
+    alors deux fois, et se retrouvait déclarée en double dans le balisage
+    `FAQPage`. On dédoublonne sur le libellé normalisé, en gardant la réponse
+    de l'établissement : plus précise que la réponse générique du métier.
+  */
+  const faqItems = [...business.faq, ...(category?.faq ?? [])].filter(
+    (item, index, all) =>
+      all.findIndex((other) => other.question.trim().toLocaleLowerCase('fr') === item.question.trim().toLocaleLowerCase('fr')) === index,
+  )
 
   const breadcrumbItems = [
     { label: 'Accueil', href: '/' },
