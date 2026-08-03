@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import Link from 'next/link'
 import type { SelectOption } from '@/types'
+import { ShowMoreGrid } from '@/components/ui/ShowMoreGrid'
 import { cn } from '@/utils/cn'
 import { formatNumber } from '@/utils/format'
 
@@ -77,17 +78,28 @@ export function FilterSidebar({
             checked={values.categorie === ''}
             onChange={autoSubmit}
           />
-          {categoryOptions.map((option) => (
-            <FilterRadio
-              key={option.value}
-              name="categorie"
-              value={option.value}
-              label={option.label}
-              count={option.count}
-              checked={values.categorie === option.value}
-              onChange={autoSubmit}
-            />
-          ))}
+
+          {/*
+            Le panneau listait les 74 catégories : la colonne devenait plus
+            haute que les résultats qu'elle sert à filtrer. Huit suffisent —
+            elles couvrent l'essentiel du volume — le reste étant dépliable.
+
+            Les entrées repliées restent dans le formulaire : un filtre actif
+            venu d'une URL partagée continue donc d'être soumis.
+          */}
+          <ShowMoreGrid max={8} noun="catégories" gridClassName="space-y-1">
+            {categoryOptions.map((option) => (
+              <FilterRadio
+                key={option.value}
+                name="categorie"
+                value={option.value}
+                label={option.label}
+                count={option.count}
+                checked={values.categorie === option.value}
+                onChange={autoSubmit}
+              />
+            ))}
+          </ShowMoreGrid>
         </div>
       </fieldset>
 
