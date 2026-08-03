@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Container } from '@/components/ui/Container'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { ShowMoreGrid } from '@/components/ui/ShowMoreGrid'
 import { CategoryCard } from '@/components/directory/CategoryCard'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { breadcrumbJsonLd } from '@/lib/jsonld'
@@ -37,7 +38,12 @@ export default async function CategoriesPage() {
         </p>
       </div>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ShowMoreGrid
+        max={10}
+        noun="catégories"
+        gridClassName="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-12"
+      >
         {categories.map((category) => (
           <CategoryCard
             key={category.slug}
@@ -49,7 +55,7 @@ export default async function CategoriesPage() {
             accentColor={category.accentColor}
           />
         ))}
-      </div>
+      </ShowMoreGrid>
 
       <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
     </Container>
