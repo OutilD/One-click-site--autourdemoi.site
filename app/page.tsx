@@ -59,23 +59,39 @@ export default async function HomePage() {
   const [categories, featured, topRated, latestReviews, latestPosts, latestPhotos, totalBusinesses] =
     await Promise.all([
       CategoryRepository.getAllWithCounts(),
-      BusinessRepository.getFeatured(6),
-      BusinessRepository.find({ sort: 'rating', perPage: 6 }),
+      // Sur-échantillonnage : les fiches sans visuel sont écartées juste après,
+      // et il faut de quoi compléter les rangées une fois le tri passé.
+      BusinessRepository.getFeatured(18),
+      BusinessRepository.find({ sort: 'rating', perPage: 18 }),
       ReviewRepository.getLatest(3),
-      PostRepository.getLatest(3),
+      PostRepository.getLatest(9),
       PhotoRepository.getLatest(8),
       BusinessRepository.count(),
     ])
 
   const categoryLabels = buildCategoryLabels(categories)
-  const highlighted = featured.length > 0 ? featured : topRated
+
+  /**
+   * Vitrine de l'accueil : uniquement ce qui a un visuel.
+   *
+   * Une carte sans image casse la rangée et donne un annuaire dépeuplé, là où
+   * la page doit donner envie d'entrer. Sur une fiche, en revanche, on garde
+   * l'établissement et on se rabat sur son logo puis son initiale : mieux vaut
+   * une fiche sobre que pas de fiche.
+   */
+  const withCover = (list: typeof featured) => list.filter((business) => business.coverImage)
+
+  const eligible = withCover(featured).length > 0 ? withCover(featured) : withCover(topRated)
+  const highlighted = eligible.slice(0, 6)
   const openingStatuses = buildOpeningStatuses(highlighted, now)
+
+  const posts = latestPosts.filter((post) => post.image).slice(0, 3)
 
   // Résolution des entreprises liées aux avis, publications et photos affichés.
   const relatedIds = [
     ...new Set([
       ...latestReviews.map((review) => review.businessId),
-      ...latestPosts.map((post) => post.businessId),
+      ...posts.map((post) => post.businessId),
     ]),
   ]
   const relatedBusinesses = await BusinessRepository.getByIds(relatedIds)
@@ -198,8 +214,11 @@ export default async function HomePage() {
           description="Parcourez l’annuaire par métier et trouvez rapidement le professionnel qu’il vous faut."
           action={{ label: 'Toutes les catégories', href: routes.categories() }}
         />
+        {/* Huit suffisent : deux rangées pleines en quatre colonnes, et le lien
+            « Toutes les catégories » de l'en-tête mène au reste. Dérouler les
+            vingt-trois ici imposait un long défilement avant la suite. */}
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((category) => (
+          {categories.slice(0, 8).map((category) => (
             <CategoryCard
               key={category.slug}
               name={category.pluralName}
@@ -265,7 +284,7 @@ export default async function HomePage() {
       )}
 
       {/* ─────────────────────── Dernières publications ───────────────────── */}
-      {latestPosts.length > 0 && (
+      {posts.length > 0 && (
         <Container size="wide" as="section" className="py-20">
           <SectionHeading
             eyebrow="04 — Actualités"
@@ -273,7 +292,7 @@ export default async function HomePage() {
             description="Actualités, offres et événements publiés par les établissements."
           />
           <ul className="mt-10 grid gap-5 lg:grid-cols-3">
-            {latestPosts.map((post) => {
+            {posts.map((post) => {
               const business = businessById.get(post.businessId)
 
               return (
