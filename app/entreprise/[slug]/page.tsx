@@ -25,7 +25,7 @@ import { buildMetadata, businessDescription, businessTitle } from '@/lib/seo'
 import { siteConfig } from '@/lib/site'
 import { buildCategoryLabels, buildOpeningStatuses, currentDayKey, hasOpeningHours } from '@/lib/view-helpers'
 import { BusinessRepository, CategoryRepository, ReviewRepository } from '@/repositories'
-import { formatRating, formatRelativeDate, pluralize } from '@/utils/format'
+import { formatRelativeDate, pluralize } from '@/utils/format'
 import { getOpeningStatus } from '@/utils/opening-hours'
 
 interface PageProps {
@@ -219,14 +219,9 @@ export default async function BusinessPage({ params }: PageProps) {
 
             {business.reviewCount > 0 && (
               <section aria-labelledby="reviews-heading">
-                <SectionHeading
-                  title="Avis clients"
-                  description={
-                    business.rating !== null
-                      ? `Note moyenne de ${formatRating(business.rating)}/5 sur ${business.reviewCount} avis.`
-                      : undefined
-                  }
-                />
+                {/* Sans sous-titre : la note et le nombre d'avis figurent déjà
+                    dans l'en-tête de la fiche et dans le bloc de synthèse. */}
+                <SectionHeading title="Avis clients" />
 
                 {breakdown && <ReviewSummary breakdown={breakdown} isEstimated className="mt-6" />}
 
