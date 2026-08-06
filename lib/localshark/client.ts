@@ -31,13 +31,26 @@ export class LocalSharkError extends Error {
 type QueryParams = Record<string, string | number | boolean | undefined>
 
 /**
+ * Étiquette de cache de l'annuaire global.
+ *
+ * Elle ne porte que sur l'endpoint A. Purger cette seule entrée suffit à
+ * rafraîchir listings, catégories et sitemap ; l'étendre aux fiches
+ * invaliderait les 268 entrées de détail d'un coup, pour rien.
+ */
+export const DIRECTORY_TAG = 'localshark-directory'
+
+/**
  * Exécute une requête GET typée.
  *
  * Retourne `null` sur `404` (ressource absente, cas nominal) et, hors mode
  * strict, sur toute erreur — l'appelant se rabat alors sur sa source de repli
  * plutôt que de faire échouer le rendu.
  */
-async function request<T>(path: string, params: QueryParams = {}): Promise<T | null> {
+async function request<T>(
+  path: string,
+  params: QueryParams = {},
+  tags: string[] = [],
+): Promise<T | null> {
   const config = getLocalSharkConfig()
 
   if (!config) {
@@ -56,7 +69,7 @@ async function request<T>(path: string, params: QueryParams = {}): Promise<T | n
         Accept: 'application/json',
       },
       signal: AbortSignal.timeout(config.timeoutMs),
-      next: { revalidate: config.revalidateSeconds },
+      next: { revalidate: config.revalidateSeconds, ...(tags.length > 0 ? { tags } : {}) },
     })
 
     if (response.status === 404) return null
@@ -98,12 +111,16 @@ export const localSharkClient = {
    * pour des rebuilds incrémentaux tant que ce point n'est pas levé côté API.
    */
   async getDirectory(query: DirectoryQuery = {}): Promise<LsDirectory | null> {
-    return request<LsDirectory>(ENDPOINTS.directory(), {
-      limit: query.limit,
-      offset: query.offset,
-      updatedSince: query.updatedSince,
-      includePaused: query.includePaused,
-    })
+    return request<LsDirectory>(
+      ENDPOINTS.directory(),
+      {
+        limit: query.limit,
+        offset: query.offset,
+        updatedSince: query.updatedSince,
+        includePaused: query.includePaused,
+      },
+      [DIRECTORY_TAG],
+    )
   },
 
   /** Endpoint B — fiche complète. Accepte le slug ou le `googleCardId`. */

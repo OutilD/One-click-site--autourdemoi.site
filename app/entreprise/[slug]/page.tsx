@@ -25,6 +25,7 @@ import { buildMetadata, businessDescription, businessTitle } from '@/lib/seo'
 import { siteConfig } from '@/lib/site'
 import { buildCategoryLabels, buildOpeningStatuses, currentDayKey, hasOpeningHours } from '@/lib/view-helpers'
 import { BusinessRepository, CategoryRepository, ReviewRepository } from '@/repositories'
+import { refreshDirectoryIfBehind } from '@/repositories/sync'
 import { formatRelativeDate, pluralize } from '@/utils/format'
 import { getOpeningStatus } from '@/utils/opening-hours'
 
@@ -71,6 +72,15 @@ export default async function BusinessPage({ params }: PageProps) {
   if (!detail) notFound()
 
   const { business, reviews } = detail
+
+  /*
+    Cette page peut avoir été rendue à la demande pour une fiche créée après le
+    dernier passage de l'API. Si c'est le cas, on programme le rafraîchissement
+    de l'annuaire global une fois la réponse envoyée : sans quoi la fiche
+    resterait absente des listings et du sitemap jusqu'à la revalidation
+    horaire. Sans effet quand l'instantané est déjà à jour.
+  */
+  refreshDirectoryIfBehind(business.slug)
 
   // Les plus récents d'abord : les sources les trient déjà par date.
   const photos = detail.photos.slice(0, siteConfig.businessPage.maxPhotos)
