@@ -15,6 +15,31 @@ const nextConfig: NextConfig = {
    * marchent plus dessus.
    */
   distDir: process.env.NEXT_DIST_DIR || '.next',
+  /**
+   * Mise a disposition de l'APK de la borne RedBox.
+   *
+   * Le fichier vit dans `public/` et se telecharge sur `/rbx.apk` : une adresse
+   * assez courte pour etre tapee au doigt sur l'ecran tactile d'un distributeur.
+   *
+   * Trois en-tetes comptent. Le type MIME evite qu'un navigateur Android affiche
+   * l'APK au lieu de le telecharger. `attachment` force l'enregistrement. Et
+   * `noindex` garde le fichier hors des moteurs de recherche : il n'est lie depuis
+   * aucune page, ce n'est pas un canal de distribution mais un depot temporaire
+   * pour une intervention.
+   */
+  async headers() {
+    return [
+      {
+        source: '/rbx.apk',
+        headers: [
+          { key: 'Content-Type', value: 'application/vnd.android.package-archive' },
+          { key: 'Content-Disposition', value: 'attachment; filename="redbox-vmc.apk"' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
+      },
+    ]
+  },
   images: {
     /**
      * Hôtes autorisés pour `next/image`.
